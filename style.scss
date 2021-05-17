@@ -2,6 +2,7 @@
   --header-fg: white;
   --header-bg: #666;
   --table-border: #999;
+  --transition-time: 0.1s;
 }
 
 body {
@@ -55,7 +56,7 @@ table {
 }
 
 .choices .choice {
-  transition: all 0.3s ease-in-out;
+  transition: all var(--transition-time) ease-in-out;
 }
 
 .choice + .choice {
@@ -99,7 +100,7 @@ table {
   border-style: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: all 0.3s ease-in-out;
+  transition: all var(--transition-time) ease-in-out;
 
   &:hover {
     opacity: 0.85;
