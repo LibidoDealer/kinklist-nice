@@ -6,23 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script>
-        const getWidthOfInput = (value) => {
-            const h1 = document.createElement('h1');
-            const span = document.createElement("span");
-            span.innerHTML = value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            h1.appendChild(span)
-            document.body.appendChild(h1);
-            const theWidth = span.getBoundingClientRect().width;
-            document.body.removeChild(h1);
-            return theWidth;
-        }
-
         const updateInputWidth = (element) => {
-            if (element.value.length) {
-                element.style.width = `${getWidthOfInput(element.value)}px`;
-            } else {
-                element.style.width = `${getWidthOfInput(element.placeholder)}px`;
-            }
+            const content = element.value || element.placeholder;
+            const span = document.createElement("span");
+            span.innerHTML = content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            element.parentElement.appendChild(span)
+            const theWidth = span.getBoundingClientRect().width;
+            element.parentElement.removeChild(span);
+            element.style.width = `${theWidth}px`;
         }
 
         document.addEventListener('DOMContentLoaded', () => {
