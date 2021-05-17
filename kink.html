@@ -18,9 +18,15 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const nameInput = document.getElementById('name');
+            const originalTitle = document.title;
             updateInputWidth(nameInput);
             nameInput.addEventListener('input', (e) => {
                 updateInputWidth(e.target);
+                if (e.target.value.length > 0) {
+                    document.title = `${e.target.value}'s ${originalTitle}`;
+                } else {
+                    document.title = originalTitle;
+                }
             });
         });
     </script>
