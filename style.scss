@@ -1,3 +1,9 @@
+:root {
+  --header-fg: white;
+  --header-bg: #666;
+  --table-border: #999;
+}
+
 body {
   font-family: Verdana, Arial, sans-serif;
   font-size: 12px;
@@ -13,40 +19,27 @@ table {
   border-collapse: collapse;
   margin-bottom: 10px;
   width: 100%;
-}
 
-th {
-  border: solid #999 1px;
-  border-right: none;
-  margin: 0;
-  padding: 4px;
-  background-color: #666;
-  color: #FFF;
-}
+  th, td {
+    padding: 4px;
+  }
 
-th.choicesCol {
-  box-sizing: border-box;
-  width: 150px;
-}
+  thead {
+    border: solid var(--table-border) 1px;
+    border-right: none;
+    margin: 0;
+    background: var(--header-bg);
+    color: var(--header-fg);
 
-th + th {
-  border-left: none;
-}
+    .choicesCol {
+      box-sizing: border-box;
+      width: 145px; // TODO: Do not hardcode
+    }
+  }
 
-th:last-child {
-  border-right: solid #999 1px;
-}
-
-td {
-  border-left: solid #999 1px;
-  border-bottom: solid #999 1px;
-  border-right: solid #999 1px;
-  margin: 0;
-  padding: 4px 2px 4px 4px;
-}
-
-td + td {
-  border-left-style: none;
+  td {
+    border: solid var(--table-border) 1px;
+  }
 }
 
 .choice {
@@ -54,16 +47,11 @@ td + td {
   width: 15px;
   height: 15px;
   opacity: 0.35;
-  overflow: hidden;
-  text-indent: 100px;
-  border: solid #000 1px;
+  border: solid black 1px;
   border-radius: 50%;
   outline-style: none !important;
   vertical-align: middle;
   display: inline-block;
-  cursor: pointer;
-  font-size: 0;
-  padding: 0;
 }
 
 .choices .choice {
@@ -182,7 +170,7 @@ td + td {
   height: 30px;
   left: 50%;
   margin-left: -165px;
-  color: #FFF;
+  color: white;
   text-transform: uppercase;
   background-color: #4980ae;
   font-size: 18px;
