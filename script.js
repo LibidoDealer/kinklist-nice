@@ -6,7 +6,6 @@ let kinks = {};
 let colors = {}
 let level = {};
 const inputKinks = {
-    $columns: [],
     createCategory: function (name, fields) {
         let $category = $('<div class="kinkCategory">')
             .addClass('cat-' + strToClass(name))
@@ -55,46 +54,9 @@ const inputKinks = {
         $row.addClass('kink-' + strToClass(name));
         return $row;
     },
-    createColumns: function () {
-        let colClasses = ['100', '50', '33', '25'];
-
-        let numCols = Math.floor((document.body.scrollWidth - 20) / 400);
-        if (!numCols) numCols = 1;
-        if (numCols > 4) numCols = 4;
-        let colClass = 'col' + colClasses[numCols - 1];
-
-        inputKinks.$columns = [];
-        for (let i = 0; i < numCols; i++) {
-            inputKinks.$columns.push($('<div>').addClass('col ' + colClass).appendTo($('#InputList')));
-        }
-    },
-    placeCategories: function ($categories) {
-        let $body = $('body');
-        let totalHeight = 0;
-        for (let i = 0; i < $categories.length; i++) {
-            let $clone = $categories[i].clone().appendTo($body);
-            let height = $clone.height();
-            totalHeight += height;
-            $clone.remove();
-        }
-
-        let colHeight = totalHeight / (inputKinks.$columns.length);
-        let colIndex = 0;
-        for (let i = 0; i < $categories.length; i++) {
-            let curHeight = inputKinks.$columns[colIndex].height();
-            let catHeight = $categories[i].height();
-            if (curHeight + (catHeight / 2) > colHeight) colIndex++;
-            while (colIndex >= inputKinks.$columns.length) {
-                colIndex--;
-            }
-            inputKinks.$columns[colIndex].append($categories[i]);
-        }
-    },
     fillInputList: function () {
         $('#InputList').empty();
-        inputKinks.createColumns();
 
-        let $categories = [];
         let kinkCats = Object.keys(kinks);
         for (let i = 0; i < kinkCats.length; i++) {
             let catName = kinkCats[i];
@@ -107,11 +69,8 @@ const inputKinks = {
             for (let k = 0; k < kinkArr.length; k++) {
                 $tbody.append(inputKinks.createKink(fields, kinkArr[k]));
             }
-
-            $categories.push($category);
+            $('#InputList').append($category);
         }
-        inputKinks.placeCategories($categories);
-
         // Make things update hash
         $('#InputList').find('button.choice').on('click', function () {
             inputKinks.updateState();
