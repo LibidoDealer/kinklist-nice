@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Kinklist</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <link rel="icon" href="favicon.png">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="widthWrapper">
+            <button id="Clear"></button>
+            <button id="Edit"></button>
+            <h1>Kink list</h1>
+            <div class="legend">
+                <div><span data-color="#FFFFFF" class="choice not-entered"></span> <span class="legend-text">Not Entered</span></div>
+                <div><span data-color="#6DB5FE" class="choice favorite"></span> <span class="legend-text">Favorite</span></div>
+                <div><span data-color="#88FC79" class="choice like"></span> <span class="legend-text">Like</span></div>
+                <div><span data-color="#F9BDF1" class="choice curious"></span> <span class="legend-curious">Curious</span></div>
+                <div><span data-color="#FDFD6B" class="choice okay"></span> <span class="legend-text">Okay</span></div>
+                <div><span data-color="#DB6C00" class="choice indifferent"></span> <span class="legend-text">Indifferent</span></div>
+                <div><span data-color="#920000" class="choice turn-off"></span> <span class="legend-text">Turn Off</span></div>
+            </div>
+            <div id="ExportWrapper">
+                <button id="Export">Export</button>
+            </div>
+            <button id="StartBtn"></button>
+            <div id="InputList"></div>
+        </div>
+        <div id="EditOverlay" class="overlay">
+            <textarea id="Kinks">
+#Bodies
+(General)
+* Skinny
+* Average
+* Chubby
+* Small breasts
+* Average breasts
+* Large breasts
+* Nipples
+* Piercings
+* Tattoos
+* Feet
+* Pubic hair
+* Shaved pubic hair
+* Facial hair
+* Body hair
+* Armpits
+* Bald
+* Legs
+* Tongues
+
+#Outfit
+(Self, Partner)
+* Clothed sex
+* Lingerie
+* Pantyhouse / Stockings
+* Heels
+* Leather
+* Latex
+* Uniform / costume
+* Cross-dressing
+* Corsets
+* Masks
+* Costumes
+* School Uniform
+* Fishnets
+* Skirts
+* Panties
+* Sexy underwear
+* Cosplay
+* Business suits
+* Glasses
+* Lipstick
+* Makeup
+* Socks
+* Goth
+* Pigtails
+* Fetish Wear
+* Body Paint
+* Maid Uniforms
+* Cheerleading Uniforms
+* Knee High Socks
+
+#General
+(Giving, Receiving)
+* Romance / Affection
+* Handjob / fingering
+* Blowjob
+* Deep throat
+* Swallowing
+* Facials
+* Cunnilingus
+* Face-sitting
+* Face Fucking
+* Edging
+* Rough sex
+* Sleepy Sex
+* JOI, SI
+* Multiple orgasms
+* Creampie
+* Tit fucking
+* Teasing
+* Talking Dirty
+* Waking up to oral sex
+
+#Ass play
+(Giving, Receiving)
+* Anal plugs
+* Anal beads
+* Anal dildos
+* Anal sex, pegging
+* Rimming
+* Double penetration
+* Anal Fingering
+* Anal fisting
+* Anal Creampie
+* Anal stretching
+* Ass to Mouth
+
+#Restrictive
+(Self, Partner)
+* (Ball) Gag
+* Collar
+* Leash
+* Chastity
+* Bondage (Light)
+* Bondage (Heavy)
+* Encasement
+* Blindfold
+* Handcuffs
+* Chains
+* Rioe bondage / suspension
+* Spreader bars
+* Shibari
+
+#Toys
+(Self, Partner)
+* Dildos
+* Plugs
+* Vibrators
+* Sounding
+* Strap-on
+* Remote controlled
+* Glass Dildos
+
+#Domination
+(Dominant, Submissive)
+* Dominant / Submissive
+* Domestic servitude
+* Slavery
+* Pet play
+* DD/lg, MD/lb
+* Discipline
+* Obedience training
+* Begging
+* Forced orgasm
+* Orgasm control
+* Orgasm denial
+* Power exchange
+
+#No consent
+(Aggressor, Target)
+* Non-con / rape
+* Blackmail / coercion
+* Kidnapping
+* Drugs / alcohol
+* Sleep play
+
+#Taboo
+(General)
+* Incest
+* Ageplay
+* Interracial / Raceplay
+* Bestiality
+* Necrophilia
+* Cheating
+* Exhibitionism
+* Voyeurism
+
+#Fluids
+(General)
+* Blood
+* Watersports
+* Scat
+* Lactation
+* Diapers
+* Cum play
+
+#Degradation
+(Giving, Receiving)
+* Glory hole
+* Name calling
+* Humiliation
+
+#Touch & Stimulation
+(Actor, Subject)
+* Cock/Pussy worship
+* Ass worship
+* Foot play
+* Tickling
+* Sensation play
+* Electro stimulation
+* Sensory deprivation
+
+#Situations
+(General)
+* Role Play
+* Daddy/girl
+* Mommy/boy
+* Daddy/babygirl
+* Mommy/babyboy
+* Sister/Brother
+
+#Situations
+(Self/partner, Partner/sef)
+* Doctor/nurse
+* Mistress/slave
+* Teacher/student
+* Nun/priest
+* Boss/Secretary
+
+#Surrealism
+(Self, Partner)
+* Futanari
+* Furry
+* Vore
+* Transformation
+* Tentacles
+* Monster or Alien
+
+#Misc. Fetish
+(Giving, Receiving)
+* Fisting
+* Gangbang
+* Breath play
+* Impregnation
+* Pregnancy
+* Feminization
+* Age play
+* Choking play
+* Squirting
+* Tongue Sucking
+* Being Cummed On
+* Shower Sex
+
+#Exposure
+(Self, Partner)
+* Erotic Photography
+* Home movies
+* Exhibitionism
+* Outdoor sex
+* Flashing
+* Butt plugs in public
+* Remote controlled toys in public
+* Sexting
+* Sex in the kitchen
+
+#Pain
+(Giving, Receiving)
+* Light pain
+* Heavy pain
+* Hair Pulling
+* Nipple clamps
+* Clothes pins
+* Face slapping
+* Caning
+* Whips / Flogging
+* Belt spanking
+* Beating
+* Spanking
+* Paddling
+* Cock/Pussy slapping
+* Cock/Pussy torture
+* Hot Wax
+* Scratching
+* Biting
+* Cutting
+            </textarea>
+            <button id="KinksOK">Accept</button>
+        </div>
+        <div id="InputOverlay" class="overlay">
+            <div class="widthWrapper">
+                <div id="InputPrevious"></div>
+                <div id="InputCurrent">
+                    <h2 id="InputCategory"></h2>
+                    <h3 id="InputField"></h3>
+                    <button class="closePopup">&times;</button>
+                    <div id="InputValues"></div>
+                </div>
+                <div id="InputNext"></div>
+            </div>
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>
