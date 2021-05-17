@@ -7,19 +7,20 @@ let colors = {}
 let level = {};
 const inputKinks = {
     createCategory: function (name, fields) {
-        let $category = $('<div class="kinkCategory">')
+        const $category = $('<div class="kinkCategory">')
             .addClass('cat-' + strToClass(name))
             .data('category', name)
             .append($('<h2>')
                 .text(name));
 
-        let $table = $('<table class="kinkGroup">').data('fields', fields);
-        let $thead = $('<thead>').appendTo($table);
-        for (let i = 0; i < fields.length; i++) {
-            $('<th>').addClass('choicesCol').text(fields[i]).appendTo($thead);
+        const $table = $('<table class="kinkGroup">').data('fields', fields);
+        const $thead = $('<thead>').appendTo($table);
+        for (const field of fields) {
+            $('<th>').addClass('choicesCol').text(field).appendTo($thead);
         }
         $('<th>').appendTo($thead);
         $('<tbody>').appendTo($table);
+
         $category.append($table);
 
         return $category;
@@ -86,12 +87,6 @@ const inputKinks = {
 
         // Make export button work
         $('#Export').on('click', inputKinks.export);
-
-        // On resize, redo columns
-        $(window).on('resize', function () {
-            // inputKinks.fillInputList();
-            inputKinks.restoreState();
-        });
     },
     drawLegend: function (context) {
         context.font = "bold 13px Arial";
@@ -123,7 +118,6 @@ const inputKinks = {
             width: width,
             height: height
         });
-        // $canvas.insertBefore($('#InputList'));
 
         let context = canvas.getContext('2d');
         context.fillStyle = '#FFFFFF';
@@ -441,7 +435,6 @@ $('#KinksOK').on('click', function () {
     try {
         let kinksText = $('#Kinks').val();
         kinks = inputKinks.parseKinksText(kinksText);
-        //inputKinks.fillInputList();
     } catch (e) {
         alert('An error occured trying to parse the text entered, please correct it and try again');
         return;

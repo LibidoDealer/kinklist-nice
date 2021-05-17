@@ -16,30 +16,41 @@ h2 {
   font-size: 18px;
 }
 
-table {
-  border-collapse: collapse;
-  margin-bottom: 10px;
-  width: 100%;
+#InputList {
+  gap: 10px;
+  max-width: 100%;
+  column-count: 3;
 
-  th, td {
-    padding: 4px;
-  }
+  .kinkCategory {
+    break-inside: avoid-column;
 
-  thead {
-    border: solid var(--table-border) 1px;
-    border-right: none;
-    margin: 0;
-    background: var(--header-bg);
-    color: var(--header-fg);
+    table {
+      border-collapse: collapse;
+      margin-bottom: 10px;
+      width: 100%;
+      min-width: 500px;
 
-    .choicesCol {
-      box-sizing: border-box;
-      width: 145px; // TODO: Do not hardcode
+      th, td {
+        padding: 4px;
+      }
+
+      thead {
+        border: solid var(--table-border) 1px;
+        border-right: none;
+        margin: 0;
+        background: var(--header-bg);
+        color: var(--header-fg);
+
+        .choicesCol {
+          box-sizing: border-box;
+          width: 145px; // TODO: Do not hardcode
+        }
+      }
+
+      td {
+        border: solid var(--table-border) 1px;
+      }
     }
-  }
-
-  td {
-    border: solid var(--table-border) 1px;
   }
 }
 
