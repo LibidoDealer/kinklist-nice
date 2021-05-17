@@ -29,58 +29,55 @@ const inputKinks = {
 
         return $category;
     },
-    createChoice: function () {
-        let $container = $('<div>').addClass('kink-choices');
-        let levels = Object.keys(level);
-        for (let i = 0; i < levels.length; i++) {
-            $('<button>')
-                .addClass('choice')
-                .addClass(level[levels[i]])
-                .data('level', levels[i])
-                .data('levelInt', i)
-                .attr('title', levels[i])
-                .appendTo($container)
-                .on('click', function () {
-                    $container.find('button').removeClass('selected');
-                    $(this).addClass('selected');
-                });
-        }
-        return $container;
-    },
-    createKink: function (fields, name) {
-        let $row = $('<tr>').data('kink', name).addClass('kink-type');
-        for (let i = 0; i < fields.length; i++) {
-            let $choices = inputKinks.createChoice();
-            $choices.data('field', fields[i]);
-            $choices.addClass(CHOICE_PREFIX + strToClass(fields[i]));
-            $('<td>').append($choices).appendTo($row);
-        }
-        $('<td>').text(name).appendTo($row);
-        $row.addClass(TYPE_PREFIX + strToClass(name));
-        return $row;
-    },
     fillInputList: function () {
         const inputList = $('#InputList');
         inputList.empty();
 
         let kinkCats = Object.keys(kinks);
         for (let i = 0; i < kinkCats.length; i++) {
-            let catName = kinkCats[i];
-            let category = kinks[catName];
-            let fields = category.fields;
-            let kinkArr = category.kinks;
+            const catName = kinkCats[i];
+            const category = kinks[catName];
+            const fields = category.fields;
+            const kinkArr = category.kinks;
 
-            let $category = inputKinks.createCategory(catName, fields);
-            let $tbody = $category.find('tbody');
+            const $category = inputKinks.createCategory(catName, fields);
+            const $tbody = $category.find('tbody');
             for (let k = 0; k < kinkArr.length; k++) {
-                $tbody.append(inputKinks.createKink(fields, kinkArr[k]));
+                const name = kinkArr[k];
+                const $row = $('<tr>').data('kink', name).addClass('kink-type');
+                for (let j = 0; j < fields.length; j++) {
+                    const fieldName = fields[j];
+                    const $choices = $('<div>').addClass('kink-choices');
+                    const levels = Object.keys(level);
+                    for (let l = 0; l < levels.length; l++) {
+                        const levelName = levels[l];
+                        $('<button>')
+                            .addClass('choice')
+                            .addClass(level[levelName])
+                            .data('level', levelName)
+                            .attr('title', levelName)
+                            .appendTo($choices)
+                            .on('click', (e) => {
+                                for (const selected of e.target.parentElement.getElementsByClassName('selected')) {
+                                    selected.classList.remove('selected');
+                                }
+                                e.target.classList.add('selected');
+                                const path = `${strToClass(catName)}/${strToClass(name)}/${strToClass(fieldName)}`;
+                                const value = strToClass(levelName);
+                                console.log('Setting', path, 'to', value);
+                                localStorage[path] = value;
+                            });
+                    }
+                    $choices.data('field', fieldName);
+                    $choices.addClass(CHOICE_PREFIX + strToClass(fieldName));
+                    $('<td>').append($choices).appendTo($row);
+                }
+                $('<td>').text(name).appendTo($row);
+                $row.addClass(TYPE_PREFIX + strToClass(name));
+                $tbody.append($row);
             }
             inputList.append($category);
         }
-        // Make things update hash
-        inputList.find('button.choice').on('click', function () {
-            inputKinks.updateState();
-        });
     },
     init: function () {
         // Set up DOM
@@ -307,29 +304,16 @@ const inputKinks = {
         pom.setAttribute('download', username + '.png');
         pom.click();
     },
-    updateState: function () {
-        // Only additive, can only remove selection by clearing everything
-        for (const category of document.getElementsByClassName('kink-category')) {
-            for (const kinkRow of category.getElementsByClassName('kink-type')) {
-                for (const choices of kinkRow.getElementsByClassName('kink-choices')) {
-                    for (const kinkChoice of choices.getElementsByClassName('choice')) {
-                        const categoryName = category.classList[1].substring(CATEGORY_PREFIX.length);
-                        const kinkType = kinkRow.classList[1].substring(TYPE_PREFIX.length);
-                        const choiceCategory = choices.classList[1].substring(CHOICE_PREFIX.length);
-                        const kinkValue = kinkChoice.classList[1];
-                        if (kinkChoice.classList.contains('selected')) {
-                            localStorage[`${categoryName}/${kinkType}/${choiceCategory}`] = kinkValue;
-                        }
-                    }
-                }
-            }
-        }
-    },
     restoreState: function () {
         for (const path in localStorage) {
             if (localStorage.hasOwnProperty(path)) {
                 const bits = path.split('/');
-                document.querySelector(`.${CATEGORY_PREFIX}${bits[0]} .${TYPE_PREFIX}${bits[1]} .${CHOICE_PREFIX}${bits[2]} .${localStorage[path]}`).classList.add('selected');
+                try {
+                    document.querySelector(`.${CATEGORY_PREFIX}${bits[0]} .${TYPE_PREFIX}${bits[1]} .${CHOICE_PREFIX}${bits[2]} .${localStorage[path]}`).classList.add('selected');
+                } catch (e) {
+                    console.warn('Error restoring', bits);
+                    localStorage.removeItem(path);
+                }
             }
         }
     },
@@ -366,13 +350,10 @@ const inputKinks = {
         return KinksText;
     },
     restoreSavedSelection: function (selection) {
-        //setTimeout(function(){
         for (let i = 0; i < selection.length; i++) {
             let selector = selection[i];
             $(selector).addClass('selected');
         }
-        inputKinks.updateState();
-        //}, 300);
     },
     parseKinksText: function (kinksText) {
         let newKinks = {};
