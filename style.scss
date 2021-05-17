@@ -87,15 +87,21 @@ h2 {
 }
 
 header {
-  overflow: auto;
+  flex-flow: column wrap;
+  align-items: center;
+  justify-content: center;
+
+  & > * {
+    margin: 0.67em 0;
+    display: inline-block;
+  }
+
   h1 {
-    float: left;
+    margin-right: 15px;
   }
 
   .legend {
-    float: left;
     padding: 0;
-    margin: 0;
     list-style: none;
 
     li {
@@ -107,15 +113,8 @@ header {
       }
     }
   }
-}
 
-
-
-// Buttons
-.buttons {
-  float: right;
-
-  button {
+  .buttons button {
     //vertical-align: text-top;
     //margin-top: 2px;
     //box-sizing: border-box;
@@ -137,7 +136,7 @@ header {
 // Name input
 h1 input {
   font: inherit;
-  width: 77.6875px;  // Re-calculated, but this works out to be the starting width
+  width: 77.6875px; // Re-calculated, but this works out to be the starting width
 
   &::placeholder {
     color: lighten(grey, 20%);
