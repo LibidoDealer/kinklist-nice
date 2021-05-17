@@ -1,5 +1,5 @@
-const CATEGORY_PREFIX = 'cat-';
-const KINK_PREFIX = 'kink-';
+const CATEGORY_PREFIX = 'category-';
+const TYPE_PREFIX = 'type-';
 const CHOICE_PREFIX = 'choice-';
 
 const strToClass = (str) => {
@@ -12,7 +12,7 @@ let level = {};
 const inputKinks = {
     createCategory: function (name, fields) {
         const $category = $('<div class="kink-category">')
-            .addClass('cat-' + strToClass(name))
+            .addClass(CATEGORY_PREFIX + strToClass(name))
             .data('category', name)
             .append($('<h2>')
                 .text(name));
@@ -30,7 +30,7 @@ const inputKinks = {
         return $category;
     },
     createChoice: function () {
-        let $container = $('<div>').addClass('choices');
+        let $container = $('<div>').addClass('kink-choices');
         let levels = Object.keys(level);
         for (let i = 0; i < levels.length; i++) {
             $('<button>')
@@ -48,7 +48,7 @@ const inputKinks = {
         return $container;
     },
     createKink: function (fields, name) {
-        let $row = $('<tr>').data('kink', name).addClass('kink-row');
+        let $row = $('<tr>').data('kink', name).addClass('kink-type');
         for (let i = 0; i < fields.length; i++) {
             let $choices = inputKinks.createChoice();
             $choices.data('field', fields[i]);
@@ -56,7 +56,7 @@ const inputKinks = {
             $('<td>').append($choices).appendTo($row);
         }
         $('<td>').text(name).appendTo($row);
-        $row.addClass(KINK_PREFIX + strToClass(name));
+        $row.addClass(TYPE_PREFIX + strToClass(name));
         return $row;
     },
     fillInputList: function () {
@@ -200,7 +200,7 @@ const inputKinks = {
         let numCats = kinkCategory.length;
         let dualCats = $('.kink-category th + th + th').length;
         let simpleCats = numCats - dualCats;
-        let numKinks = $('.kink-row').length;
+        let numKinks = $('.kink-type').length;
 
         // Determine the height required for all categories and kinks
         let totalHeight = (
@@ -252,10 +252,10 @@ const inputKinks = {
             }
 
             // Drawcalls for kinks
-            $cat.find('.kink-row').each(function () {
+            $cat.find('.kink-type').each(function () {
                 let $kinkRow = $(this);
                 let drawCall = {
-                    y: column.height, type: 'kink-row', data: {
+                    y: column.height, type: 'kink-type', data: {
                         choices: [],
                         text: $kinkRow.data('kink')
                     }
@@ -264,7 +264,7 @@ const inputKinks = {
                 column.height += rowHeight;
 
                 // Add choices
-                $kinkRow.find('.choices').each(function () {
+                $kinkRow.find('.kink-choices').each(function () {
                     let $selection = $(this).find('.choice.selected');
                     let selection = ($selection.length > 0)
                         ? $selection.data('level')
@@ -310,15 +310,15 @@ const inputKinks = {
     updateState: function () {
         // Only additive, can only remove selection by clearing everything
         for (const category of document.getElementsByClassName('kink-category')) {
-            const categoryName = category.classList[1].substring(CATEGORY_PREFIX.length);
-            for (const kinkRow of category.getElementsByClassName('kink-row')) {
-                const kinkName = kinkRow.classList[1].substring(KINK_PREFIX.length);
-                for (const choices of kinkRow.getElementsByClassName('choices')) {
-                    const choiceCategory = choices.classList[1].substring(CHOICE_PREFIX.length);
+            for (const kinkRow of category.getElementsByClassName('kink-type')) {
+                for (const choices of kinkRow.getElementsByClassName('kink-choices')) {
                     for (const kinkChoice of choices.getElementsByClassName('choice')) {
+                        const categoryName = category.classList[1].substring(CATEGORY_PREFIX.length);
+                        const kinkType = kinkRow.classList[1].substring(TYPE_PREFIX.length);
+                        const choiceCategory = choices.classList[1].substring(CHOICE_PREFIX.length);
                         const kinkValue = kinkChoice.classList[1];
                         if (kinkChoice.classList.contains('selected')) {
-                            localStorage[`${categoryName}/${kinkName}/${choiceCategory}`] = kinkValue;
+                            localStorage[`${categoryName}/${kinkType}/${choiceCategory}`] = kinkValue;
                         }
                     }
                 }
@@ -329,7 +329,7 @@ const inputKinks = {
         for (const path in localStorage) {
             if (localStorage.hasOwnProperty(path)) {
                 const bits = path.split('/');
-                document.querySelector(`.${CATEGORY_PREFIX}${bits[0]} .${KINK_PREFIX}${bits[1]} .${CHOICE_PREFIX}${bits[2]} .${localStorage[path]}`).classList.add('selected');
+                document.querySelector(`.${CATEGORY_PREFIX}${bits[0]} .${TYPE_PREFIX}${bits[1]} .${CHOICE_PREFIX}${bits[2]} .${localStorage[path]}`).classList.add('selected');
             }
         }
     },
@@ -341,7 +341,7 @@ const inputKinks = {
             // .choices selector
             selector = '.' + $(this).closest('.choices')[0].className.replace(/ /g, '.') + ' ' + selector;
             // .kinkRow selector
-            selector = '.' + $(this).closest('tr.kink-row')[0].className.replace(/ /g, '.') + ' ' + selector;
+            selector = '.' + $(this).closest('tr.kink-type')[0].className.replace(/ /g, '.') + ' ' + selector;
             // .kinkCategory selector
             selector = '.' + $(this).closest('.kink-category')[0].className.replace(/ /g, '.') + ' ' + selector;
             selector = selector.replace('.selected', '');
@@ -484,7 +484,7 @@ function getChoiceValue($choices) {
 }
 
 function getChoicesElement(category, kink, field) {
-    return $(`.${CATEGORY_PREFIX}${strToClass(category)} .${KINK_PREFIX}${strToClass(kink)} .${CHOICE_PREFIX}${strToClass(field)}`);
+    return $(`.${CATEGORY_PREFIX}${strToClass(category)} .${TYPE_PREFIX}${strToClass(kink)} .${CHOICE_PREFIX}${strToClass(field)}`);
 }
 
 inputKinks.getAllKinks = function () {
