@@ -55,7 +55,8 @@ const inputKinks = {
         return $row;
     },
     fillInputList: function () {
-        $('#InputList').empty();
+        const inputList = $('#InputList');
+        inputList.empty();
 
         let kinkCats = Object.keys(kinks);
         for (let i = 0; i < kinkCats.length; i++) {
@@ -69,10 +70,10 @@ const inputKinks = {
             for (let k = 0; k < kinkArr.length; k++) {
                 $tbody.append(inputKinks.createKink(fields, kinkArr[k]));
             }
-            $('#InputList').append($category);
+            inputList.append($category);
         }
         // Make things update hash
-        $('#InputList').find('button.choice').on('click', function () {
+        inputList.find('button.choice').on('click', function () {
             inputKinks.updateState();
         });
     },
@@ -182,6 +183,7 @@ const inputKinks = {
         if (typeof username !== 'string' || !username.length) {
             return;
         }
+        const kinkCategory = $('.kinkCategory');
 
         // Constants
         let numCols = 6;
@@ -197,7 +199,7 @@ const inputKinks = {
         };
 
         // Find out how many we have of everything
-        let numCats = $('.kinkCategory').length;
+        let numCats = kinkCategory.length;
         let dualCats = $('.kinkCategory th + th + th').length;
         let simpleCats = numCats - dualCats;
         let numKinks = $('.kinkRow').length;
@@ -219,7 +221,7 @@ const inputKinks = {
         // for the appropriate column
         let avgColHeight = totalHeight / numCols;
         let columnIndex = 0;
-        $('.kinkCategory').each(function () {
+        kinkCategory.each(function () {
             let $cat = $(this);
             let catName = $cat.data('category');
             let category = kinks[catName];
