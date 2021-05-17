@@ -8,6 +8,9 @@
 body {
   font-family: Verdana, Arial, sans-serif;
   font-size: 12px;
+  max-width: 2000px;
+  margin: 0 auto;
+  padding: 0 10px;
 }
 
 h2 {
@@ -34,7 +37,6 @@ h2 {
 
       thead {
         border: solid var(--table-border) 1px;
-        border-right: none;
         margin: 0;
         background: var(--header-bg);
         color: var(--header-fg);
@@ -84,37 +86,60 @@ h2 {
   }
 }
 
-// Legend
-.legend {
-  font-size: 14px;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-
-  li {
-    display: inline-block;
-    margin-right: 15px;
-
-    .choice {
-      opacity: 1;
-    }
+header {
+  overflow: auto;
+  h1 {
+    float: left;
   }
 
+  .legend {
+    float: left;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    li {
+      display: inline-block;
+      margin-right: 15px;
+
+      .choice {
+        opacity: 1;
+      }
+    }
+  }
 }
 
-// Buttons
-.buttons button {
-  min-width: 36px;
-  height: 36px;
-  box-sizing: border-box;
-  text-transform: uppercase;
-  font-size: 18px;
-  border-style: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all var(--transition-time) ease-in-out;
 
-  &:hover {
-    opacity: 0.85;
+
+// Buttons
+.buttons {
+  float: right;
+
+  button {
+    //vertical-align: text-top;
+    //margin-top: 2px;
+    //box-sizing: border-box;
+    background: #4980ae;
+    color: white;
+    text-transform: uppercase;
+    padding: 8px 15px 5px;
+    border-style: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all var(--transition-time) ease-in-out;
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+}
+
+// Name input
+h1 input {
+  font: inherit;
+  width: 77.6875px;  // Re-calculated, but this works out to be the starting width
+
+  &::placeholder {
+    color: lighten(grey, 20%);
   }
 }

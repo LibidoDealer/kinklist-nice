@@ -5,7 +5,7 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.8);
-  display: none;
+  display: none !important;
 }
 
 #EditOverlay #Kinks {
@@ -52,7 +52,7 @@
   margin-right: -0.25em;
 }
 
-#InputOverlay .widthWrapper {
+#InputOverlay {
   display: inline-block;
   vertical-align: middle;
   width: 400px;
@@ -60,25 +60,25 @@
   max-width: 100%;
 }
 
-#InputOverlay .widthWrapper #InputCurrent, #InputOverlay .widthWrapper .kink-simple {
+#InputOverlay #InputCurrent, #InputOverlay .kink-simple {
   display: block;
   box-sizing: border-box;
   padding: 10px;
   background-color: #EEE;
 }
 
-#InputOverlay .widthWrapper .kink-simple {
+#InputOverlay .kink-simple {
   position: relative;
   height: 40px;
   line-height: 20px;
   cursor: pointer;
 }
 
-#InputOverlay .widthWrapper .kink-simple .choice {
+#InputOverlay .kink-simple .choice {
   margin-right: 5px;
 }
 
-#InputOverlay .widthWrapper .kink-simple .txt-category {
+#InputOverlay .kink-simple .txt-category {
   position: absolute;
   right: 5px;
   top: 5px;
@@ -89,24 +89,24 @@
   line-height: 1em;
 }
 
-#InputOverlay .widthWrapper .kink-simple .txt-field, #InputOverlay .widthWrapper .kink-simple .txt-kink {
+#InputOverlay .kink-simple .txt-field, #InputOverlay .kink-simple .txt-kink {
   vertical-align: middle;
 }
 
-#InputOverlay .widthWrapper .kink-simple .txt-field:empty {
+#InputOverlay .kink-simple .txt-field:empty {
   display: none;
 }
 
-#InputOverlay .widthWrapper .kink-simple .txt-field:before {
+#InputOverlay .kink-simple .txt-field:before {
   content: '(';
 }
 
-#InputOverlay .widthWrapper .kink-simple .txt-field:after {
+#InputOverlay .kink-simple .txt-field:after {
   content: ') ';
 }
 
-#InputOverlay .widthWrapper #InputPrevious .kink-simple:first-child,
-#InputOverlay .widthWrapper #InputNext .kink-simple:nth-child(3) {
+#InputOverlay #InputPrevious .kink-simple:first-child,
+#InputOverlay #InputNext .kink-simple:nth-child(3) {
   background-color: #BBB;
   font-size: 10px;
   margin-left: 12px;
@@ -114,8 +114,8 @@
   height: 33px;
 }
 
-#InputOverlay .widthWrapper #InputPrevious .kink-simple:nth-child(2),
-#InputOverlay .widthWrapper #InputNext .kink-simple:nth-child(2) {
+#InputOverlay #InputPrevious .kink-simple:nth-child(2),
+#InputOverlay #InputNext .kink-simple:nth-child(2) {
   background-color: #CCC;
   font-size: 11px;
   margin-left: 6px;
@@ -123,28 +123,28 @@
   height: 37px;
 }
 
-#InputOverlay .widthWrapper #InputPrevious .kink-simple:nth-child(3),
-#InputOverlay .widthWrapper #InputNext .kink-simple:first-child {
+#InputOverlay #InputPrevious .kink-simple:nth-child(3),
+#InputOverlay #InputNext .kink-simple:first-child {
   background-color: #DDD;
   margin-left: 3px;
   margin-right: 3px;
 }
 
-#InputOverlay .widthWrapper #InputPrevious .kink-simple:first-child {
+#InputOverlay #InputPrevious .kink-simple:first-child {
   padding-bottom: 4px;
   padding-top: 7px;
 }
 
-#InputOverlay .widthWrapper #InputNext .kink-simple:nth-child(3) {
+#InputOverlay #InputNext .kink-simple:nth-child(3) {
   padding-top: 4px;
 }
 
-#InputOverlay .widthWrapper #InputPrevious .kink-simple:nth-child(2) {
+#InputOverlay #InputPrevious .kink-simple:nth-child(2) {
   padding-bottom: 7px;
   padding-top: 9px;
 }
 
-#InputOverlay .widthWrapper #InputNext .kink-simple:nth-child(2) {
+#InputOverlay #InputNext .kink-simple:nth-child(2) {
   padding-top: 7px;
 }
 
@@ -158,11 +158,11 @@
   border-bottom-right-radius: 2px;
 }
 
-#InputOverlay .widthWrapper #InputCurrent {
+#InputOverlay #InputCurrent {
   position: relative;
 }
 
-#InputOverlay .widthWrapper #InputCurrent .closePopup {
+#InputOverlay #InputCurrent .closePopup {
   position: absolute;
   top: 0;
   right: 5px;
@@ -174,23 +174,23 @@
   opacity: 0.65;
 }
 
-#InputOverlay .widthWrapper #InputCurrent .closePopup:hover {
+#InputOverlay #InputCurrent .closePopup:hover {
   opacity: 1;
 }
 
-#InputOverlay .widthWrapper #InputCurrent h2 {
+#InputOverlay #InputCurrent h2 {
   text-transform: uppercase;
   opacity: 0.6;
   margin: 0;
 }
 
-#InputOverlay .widthWrapper #InputCurrent h3 {
+#InputOverlay #InputCurrent h3 {
   margin-top: 3px;
   margin-bottom: 0;
   font-size: 14px;
 }
 
-#InputOverlay .widthWrapper #InputCurrent #InputValues .big-choice {
+#InputOverlay #InputCurrent #InputValues .big-choice {
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.75);
   border-radius: 4px;
@@ -198,21 +198,21 @@
   cursor: pointer;
 }
 
-#InputOverlay .widthWrapper #InputCurrent #InputValues .big-choice.selected {
+#InputOverlay #InputCurrent #InputValues .big-choice.selected {
   font-weight: bold;
 }
 
-#InputOverlay .widthWrapper #InputCurrent #InputValues .big-choice.selected .choice {
+#InputOverlay #InputCurrent #InputValues .big-choice.selected .choice {
   opacity: 1;
 }
 
-#InputOverlay .widthWrapper #InputCurrent #InputValues .big-choice:hover {
+#InputOverlay #InputCurrent #InputValues .big-choice:hover {
   padding: 8px;
   border: solid #999 2px;
   background-color: rgba(255, 255, 255, 1);
 }
 
-#InputOverlay .widthWrapper #InputCurrent #InputValues .big-choice .btn-num-text {
+#InputOverlay #InputCurrent #InputValues .big-choice .btn-num-text {
   float: right;
   display: inline-block;
   border: solid #CCC 1px;

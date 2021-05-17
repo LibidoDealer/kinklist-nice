@@ -5,42 +5,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script>
+        const getWidthOfInput = (value) => {
+            const h1 = document.createElement('h1');
+            const span = document.createElement("span");
+            span.innerHTML = value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            h1.appendChild(span)
+            document.body.appendChild(h1);
+            const theWidth = span.getBoundingClientRect().width;
+            document.body.removeChild(h1);
+            return theWidth;
+        }
+
+        const updateInputWidth = (element) => {
+            if (element.value.length) {
+                element.style.width = `${getWidthOfInput(element.value)}px`;
+            } else {
+                element.style.width = `${getWidthOfInput(element.placeholder)}px`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const nameInput = document.getElementById('name');
+            updateInputWidth(nameInput);
+            nameInput.addEventListener('input', (e) => {
+                updateInputWidth(e.target);
+            });
+        });
+    </script>
     <link rel="icon" href="favicon.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="overlay.css">
 </head>
 <body>
-<div class="widthWrapper">
-    <h1>Kink list</h1>
-    <div class="buttons">
-        <button id="Export">Save</button>
-        <button id="Clear">Clear</button>
-        <button id="Edit">Edit</button>
-        <button id="StartBtn">Start</button>
-    </div>
-    <ul class="legend">
-        <li>
-            <div data-color="#FFFFFF" class="choice not-entered"></div>
-            <span class="legend-text">Not Entered</span></li>
-        <li>
-            <div data-color="#6DB5FE" class="choice favorite"></div>
-            <span class="legend-text">Favorite</span></li>
-        <li>
-            <div data-color="#88FC79" class="choice like"></div>
-            <span class="legend-text">Like</span></li>
-        <li>
-            <div data-color="#F9BDF1" class="choice curious"></div>
-            <span class="legend-curious">Curious</span></li>
-        <li>
-            <div data-color="#FDFD6B" class="choice okay"></div>
-            <span class="legend-text">Okay</span></li>
-        <li>
-            <div data-color="#DB6C00" class="choice indifferent"></div>
-            <span class="legend-text">Indifferent</span></li>
-        <li>
-            <div data-color="#920000" class="choice turn-off"></div>
-            <span class="legend-text">Turn Off</span></li>
-    </ul>
+<div>
+    <header>
+        <h1>
+            <label><input name="name" id="name" placeholder="Name" autocomplete="off"></label>'s Kink List
+        </h1>
+        <ul class="legend">
+            <li>
+                <div data-color="#FFFFFF" class="choice not-entered"></div>
+                <span class="legend-text">Not Entered</span>
+            </li>
+            <li>
+                <div data-color="#6DB5FE" class="choice favorite"></div>
+                <span class="legend-text">Favorite</span>
+            </li>
+            <li>
+                <div data-color="#88FC79" class="choice like"></div>
+                <span class="legend-text">Like</span>
+            </li>
+            <li>
+                <div data-color="#F9BDF1" class="choice curious"></div>
+                <span class="legend-curious">Curious</span>
+            </li>
+            <li>
+                <div data-color="#FDFD6B" class="choice okay"></div>
+                <span class="legend-text">Okay</span>
+            </li>
+            <li>
+                <div data-color="#DB6C00" class="choice indifferent"></div>
+                <span class="legend-text">Indifferent</span>
+            </li>
+            <li>
+                <div data-color="#920000" class="choice turn-off"></div>
+                <span class="legend-text">Turn Off</span>
+            </li>
+        </ul>
+        <span class="buttons">
+            <button id="Export">Export</button>
+            <button id="Clear">Clear</button>
+            <button id="Edit">Edit</button>
+            <button id="StartBtn">Start</button>
+        </span>
+    </header>
     <div id="InputList"></div>
 </div>
 <div id="EditOverlay" class="overlay">
