@@ -10,22 +10,22 @@
     </head>
     <body>
         <div class="widthWrapper">
-            <button id="Clear"></button>
-            <button id="Edit"></button>
             <h1>Kink list</h1>
-            <div class="legend">
-                <div><span data-color="#FFFFFF" class="choice not-entered"></span> <span class="legend-text">Not Entered</span></div>
-                <div><span data-color="#6DB5FE" class="choice favorite"></span> <span class="legend-text">Favorite</span></div>
-                <div><span data-color="#88FC79" class="choice like"></span> <span class="legend-text">Like</span></div>
-                <div><span data-color="#F9BDF1" class="choice curious"></span> <span class="legend-curious">Curious</span></div>
-                <div><span data-color="#FDFD6B" class="choice okay"></span> <span class="legend-text">Okay</span></div>
-                <div><span data-color="#DB6C00" class="choice indifferent"></span> <span class="legend-text">Indifferent</span></div>
-                <div><span data-color="#920000" class="choice turn-off"></span> <span class="legend-text">Turn Off</span></div>
+            <div class="buttons">
+                <button id="Export">Save</button>
+                <button id="Clear">Clear</button>
+                <button id="Edit">Edit</button>
+                <button id="StartBtn">Start</button>
             </div>
-            <div id="ExportWrapper">
-                <button id="Export">Export</button>
-            </div>
-            <button id="StartBtn"></button>
+            <ul class="legend">
+                <li><div data-color="#FFFFFF" class="choice not-entered"></div> <span class="legend-text">Not Entered</span></li>
+                <li><div data-color="#6DB5FE" class="choice favorite"></div> <span class="legend-text">Favorite</span></li>
+                <li><div data-color="#88FC79" class="choice like"></div> <span class="legend-text">Like</span></li>
+                <li><div data-color="#F9BDF1" class="choice curious"></div> <span class="legend-curious">Curious</span></li>
+                <li><div data-color="#FDFD6B" class="choice okay"></div> <span class="legend-text">Okay</span></li>
+                <li><div data-color="#DB6C00" class="choice indifferent"></div> <span class="legend-text">Indifferent</span></li>
+                <li><div data-color="#920000" class="choice turn-off"></div> <span class="legend-text">Turn Off</span></li>
+            </ul>
             <div id="InputList"></div>
         </div>
         <div id="EditOverlay" class="overlay">
