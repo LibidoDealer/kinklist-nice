@@ -1,3 +1,7 @@
+const CATEGORY_PREFIX = 'cat-';
+const KINK_PREFIX = 'kink-';
+const CHOICE_PREFIX = 'choice-';
+
 const strToClass = (str) => {
     return str.toLowerCase().replaceAll(/[^a-z]+/g, '-');
 }
@@ -7,13 +11,13 @@ let colors = {}
 let level = {};
 const inputKinks = {
     createCategory: function (name, fields) {
-        const $category = $('<div class="kinkCategory">')
+        const $category = $('<div class="kink-category">')
             .addClass('cat-' + strToClass(name))
             .data('category', name)
             .append($('<h2>')
                 .text(name));
 
-        const $table = $('<table class="kinkGroup">').data('fields', fields);
+        const $table = $('<table>').data('fields', fields);
         const $thead = $('<thead>').appendTo($table);
         for (const field of fields) {
             $('<th>').addClass('choicesCol').text(field).appendTo($thead);
@@ -44,15 +48,15 @@ const inputKinks = {
         return $container;
     },
     createKink: function (fields, name) {
-        let $row = $('<tr>').data('kink', name).addClass('kinkRow');
+        let $row = $('<tr>').data('kink', name).addClass('kink-row');
         for (let i = 0; i < fields.length; i++) {
             let $choices = inputKinks.createChoice();
             $choices.data('field', fields[i]);
-            $choices.addClass('choice-' + strToClass(fields[i]));
+            $choices.addClass(CHOICE_PREFIX + strToClass(fields[i]));
             $('<td>').append($choices).appendTo($row);
         }
         $('<td>').text(name).appendTo($row);
-        $row.addClass('kink-' + strToClass(name));
+        $row.addClass(KINK_PREFIX + strToClass(name));
         return $row;
     },
     fillInputList: function () {
@@ -177,7 +181,7 @@ const inputKinks = {
         if (typeof username !== 'string' || !username.length) {
             return;
         }
-        const kinkCategory = $('.kinkCategory');
+        const kinkCategory = $('.kink-category');
 
         // Constants
         let numCols = 6;
@@ -194,9 +198,9 @@ const inputKinks = {
 
         // Find out how many we have of everything
         let numCats = kinkCategory.length;
-        let dualCats = $('.kinkCategory th + th + th').length;
+        let dualCats = $('.kink-category th + th + th').length;
         let simpleCats = numCats - dualCats;
-        let numKinks = $('.kinkRow').length;
+        let numKinks = $('.kink-row').length;
 
         // Determine the height required for all categories and kinks
         let totalHeight = (
@@ -248,10 +252,10 @@ const inputKinks = {
             }
 
             // Drawcalls for kinks
-            $cat.find('.kinkRow').each(function () {
+            $cat.find('.kink-row').each(function () {
                 let $kinkRow = $(this);
                 let drawCall = {
-                    y: column.height, type: 'kinkRow', data: {
+                    y: column.height, type: 'kink-row', data: {
                         choices: [],
                         text: $kinkRow.data('kink')
                     }
@@ -304,26 +308,30 @@ const inputKinks = {
         pom.click();
     },
     updateState: function () {
-        let hashValues = [];
-        $('#InputList .choices').each(function () {
-            let $this = $(this);
-            let lvlInt = $this.find('.selected').data('levelInt');
-            if (!lvlInt) lvlInt = 0;
-            hashValues.push(lvlInt);
-        });
-        localStorage.choices = hashValues;
+        // Only additive, can only remove selection by clearing everything
+        for (const category of document.getElementsByClassName('kink-category')) {
+            const categoryName = category.classList[1].substring(CATEGORY_PREFIX.length);
+            for (const kinkRow of category.getElementsByClassName('kink-row')) {
+                const kinkName = kinkRow.classList[1].substring(KINK_PREFIX.length);
+                for (const choices of kinkRow.getElementsByClassName('choices')) {
+                    const choiceCategory = choices.classList[1].substring(CHOICE_PREFIX.length);
+                    for (const kinkChoice of choices.getElementsByClassName('choice')) {
+                        const kinkValue = kinkChoice.classList[1];
+                        if (kinkChoice.classList.contains('selected')) {
+                            localStorage[`${categoryName}/${kinkName}/${choiceCategory}`] = kinkValue;
+                        }
+                    }
+                }
+            }
+        }
     },
     restoreState: function () {
-        if (localStorage.choices === undefined) {
-            return;
+        for (const path in localStorage) {
+            if (localStorage.hasOwnProperty(path)) {
+                const bits = path.split('/');
+                document.querySelector(`.${CATEGORY_PREFIX}${bits[0]} .${KINK_PREFIX}${bits[1]} .${CHOICE_PREFIX}${bits[2]} .${localStorage[path]}`).classList.add('selected');
+            }
         }
-        let values = localStorage.choices.split(",").map(x => parseInt(x));
-        let valueIndex = 0;
-        $('#InputList .choices').each(function () {
-            let $this = $(this);
-            let value = values[valueIndex++];
-            $this.children().eq(value).addClass('selected');
-        });
     },
     saveSelection: function () {
         let selection = [];
@@ -333,9 +341,9 @@ const inputKinks = {
             // .choices selector
             selector = '.' + $(this).closest('.choices')[0].className.replace(/ /g, '.') + ' ' + selector;
             // .kinkRow selector
-            selector = '.' + $(this).closest('tr.kinkRow')[0].className.replace(/ /g, '.') + ' ' + selector;
+            selector = '.' + $(this).closest('tr.kink-row')[0].className.replace(/ /g, '.') + ' ' + selector;
             // .kinkCategory selector
-            selector = '.' + $(this).closest('.kinkCategory')[0].className.replace(/ /g, '.') + ' ' + selector;
+            selector = '.' + $(this).closest('.kink-category')[0].className.replace(/ /g, '.') + ' ' + selector;
             selector = selector.replace('.selected', '');
             selection.push(selector);
         });
@@ -476,7 +484,7 @@ function getChoiceValue($choices) {
 }
 
 function getChoicesElement(category, kink, field) {
-    return $(`.cat-${strToClass(category)} .kink-${strToClass(kink)} .choice-${strToClass(field)}`);
+    return $(`.${CATEGORY_PREFIX}${strToClass(category)} .${KINK_PREFIX}${strToClass(kink)} .${CHOICE_PREFIX}${strToClass(field)}`);
 }
 
 inputKinks.getAllKinks = function () {
@@ -494,7 +502,14 @@ inputKinks.getAllKinks = function () {
                 let kink = kinkArr[k];
                 let $choices = getChoicesElement(category, kink, field);
                 let value = getChoiceValue($choices);
-                let obj = {category: category, kink: kink, field: field, value: value, $choices: $choices, showField: (fields.length >= 2)};
+                let obj = {
+                    category: category,
+                    kink: kink,
+                    field: field,
+                    value: value,
+                    $choices: $choices,
+                    showField: (fields.length >= 2)
+                };
                 list.push(obj);
             }
         }
