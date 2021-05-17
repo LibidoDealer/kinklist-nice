@@ -617,33 +617,7 @@ inputKinks.inputPopup = {
     }
 };
 
-$(window).on('keydown', function (e) {
-    if (e.altKey || e.shiftKey || e.ctrlKey) return;
-    if (!$popup.is(':visible')) return;
-
-    if (e.keyCode === 38) {
-        inputKinks.inputPopup.showPrev();
-        e.preventDefault();
-        e.stopPropagation();
-    }
-    if (e.keyCode === 40) {
-        inputKinks.inputPopup.showNext();
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
-    let btn = -1;
-    if (e.keyCode >= 96 && e.keyCode <= 101) {
-        btn = e.keyCode - 96;
-    } else if (e.keyCode >= 48 && e.keyCode <= 53) {
-        btn = e.keyCode - 48;
-    } else {
-        return;
-    }
-
-    let $btn = $options.find('.big-choice').eq(btn);
-    $btn.click();
-});
+// TODO: Keyboard selections?
 $('#StartBtn').on('click', inputKinks.inputPopup.show);
 $('#InputCurrent .closePopup, #InputOverlay').on('click', function () {
     $popup.fadeOut();
