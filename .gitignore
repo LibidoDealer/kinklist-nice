@@ -1,6 +1,9 @@
 # IDE
 .idea/
 
+# JS is all compiled
+*.js
+
 # Stylesheets are compiled
 *.css
 *.css.map
