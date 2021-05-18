@@ -233,7 +233,11 @@ const inputKinks = {
             let column = columns[columnIndex];
 
             // Drawcall for title
-            let drawCall = {y: column.height};
+            const drawCall = {
+                y: column.height,
+                type: undefined,
+                data: undefined
+            };
             column.drawStack.push(drawCall);
             if (fields.length < 2) {
                 column.height += simpleTitleHeight;
@@ -468,7 +472,7 @@ function getChoicesElement(category, kink, field) {
     return $(`.${CATEGORY_PREFIX}${strToClass(category)} .${TYPE_PREFIX}${strToClass(kink)} .${CHOICE_PREFIX}${strToClass(field)}`);
 }
 
-inputKinks.getAllKinks = function () {
+const getAllKinks = function () {
     let list = [];
 
     let categories = Object.keys(kinks);
@@ -499,14 +503,14 @@ inputKinks.getAllKinks = function () {
     return list;
 };
 
-inputKinks.inputPopup = {
+const inputPopup = {
     numPrev: 3,
     numNext: 3,
     allKinks: [],
     kinkByIndex: function (i) {
-        let numKinks = inputKinks.inputPopup.allKinks.length;
+        let numKinks = inputPopup.allKinks.length;
         i = (numKinks + i) % numKinks;
-        return inputKinks.inputPopup.allKinks[i];
+        return inputPopup.allKinks[i];
     },
     generatePrimary: function (kink) {
         let $container = $('<div>');
@@ -532,7 +536,7 @@ inputKinks.inputPopup = {
                 kink.value = text;
                 $options.fadeOut(200, function () {
                     $options.show();
-                    inputKinks.inputPopup.showNext();
+                    inputPopup.showNext(undefined);
                 });
                 let choiceClass = strToClass(text);
                 kink.$choices.find('.' + choiceClass).click();
@@ -557,32 +561,32 @@ inputKinks.inputPopup = {
         $popup.data('index', index);
 
         // Current
-        let currentKink = inputKinks.inputPopup.kinkByIndex(index);
-        let $currentKink = inputKinks.inputPopup.generatePrimary(currentKink);
+        let currentKink = inputPopup.kinkByIndex(index);
+        let $currentKink = inputPopup.generatePrimary(currentKink);
         $options.append($currentKink);
         $category.text(currentKink.category);
         $field.text((currentKink.showField ? '(' + currentKink.field + ') ' : '') + currentKink.kink);
         $options.append($currentKink);
 
         // Prev
-        for (let i = inputKinks.inputPopup.numPrev; i > 0; i--) {
-            let prevKink = inputKinks.inputPopup.kinkByIndex(index - i);
-            let $prevKink = inputKinks.inputPopup.generateSecondary(prevKink);
+        for (let i = inputPopup.numPrev; i > 0; i--) {
+            let prevKink = inputPopup.kinkByIndex(index - i);
+            let $prevKink = inputPopup.generateSecondary(prevKink);
             $previous.append($prevKink);
             (function (skip) {
                 $prevKink.on('click', function () {
-                    inputKinks.inputPopup.showPrev(skip);
+                    inputPopup.showPrev(skip);
                 });
             })(i);
         }
         // Next
-        for (let i = 1; i <= inputKinks.inputPopup.numNext; i++) {
-            let nextKink = inputKinks.inputPopup.kinkByIndex(index + i);
-            let $nextKink = inputKinks.inputPopup.generateSecondary(nextKink);
+        for (let i = 1; i <= inputPopup.numNext; i++) {
+            let nextKink = inputPopup.kinkByIndex(index + i);
+            let $nextKink = inputPopup.generateSecondary(nextKink);
             $next.append($nextKink);
             (function (skip) {
                 $nextKink.on('click', function () {
-                    inputKinks.inputPopup.showNext(skip);
+                    inputPopup.showNext(skip);
                 });
             })(i);
         }
@@ -590,26 +594,26 @@ inputKinks.inputPopup = {
     showPrev: function (skip) {
         if (typeof skip !== "number") skip = 1;
         let index = $popup.data('index') - skip;
-        let numKinks = inputKinks.inputPopup.allKinks.length;
+        let numKinks = inputPopup.allKinks.length;
         index = (numKinks + index) % numKinks;
-        inputKinks.inputPopup.showIndex(index);
+        inputPopup.showIndex(index);
     },
     showNext: function (skip) {
         if (typeof skip !== "number") skip = 1;
         let index = $popup.data('index') + skip;
-        let numKinks = inputKinks.inputPopup.allKinks.length;
+        let numKinks = inputPopup.allKinks.length;
         index = (numKinks + index) % numKinks;
-        inputKinks.inputPopup.showIndex(index);
+        inputPopup.showIndex(index);
     },
     show: function () {
-        inputKinks.inputPopup.allKinks = inputKinks.getAllKinks();
-        inputKinks.inputPopup.showIndex(0);
+        inputPopup.allKinks = getAllKinks();
+        inputPopup.showIndex(0);
         $popup.fadeIn();
     }
 };
 
 // TODO: Keyboard selections?
-$('#StartBtn').on('click', inputKinks.inputPopup.show);
+$('#StartBtn').on('click', inputPopup.show);
 $('#InputCurrent .closePopup, #InputOverlay').on('click', function () {
     $popup.fadeOut();
 });
