@@ -14,47 +14,56 @@ const setupDOM = () => {
     const inputList = $('#InputList');
     inputList.empty();
 
-    let kinkCats = Object.keys(kinks);
-    for (let i = 0; i < kinkCats.length; i++) {
-        const catName = kinkCats[i];
+    for (const catName of Object.keys(kinks)) {
         const category = kinks[catName];
-        const fields = category.fields;
-        const kinkArr = category.kinks;
 
-        const $category = inputKinks.createCategory(catName, fields);
+        const $category = $('<div class="kink-category">')
+            .addClass(CATEGORY_PREFIX + strToClass(name))
+            .data('category', name)
+            .append($('<h2>')
+                .text(name));
+
+        const $table = $('<table>').data('fields', category.fields);
+        const $thead = $('<thead>').appendTo($table);
+        for (const field of category.fields) {
+            $('<th>').addClass('choicesCol').text(field).appendTo($thead);
+        }
+        $('<th>').appendTo($thead);
+        $('<tbody>').appendTo($table);
+        $category.append($table);
+
         const $tbody = $category.find('tbody');
-        for (let k = 0; k < kinkArr.length; k++) {
-            const name = kinkArr[k];
-            const $row = $('<tr>').data('kink', name).addClass('kink-type');
-            for (let j = 0; j < fields.length; j++) {
-                const fieldName = fields[j];
-                const $choices = $('<div>').addClass('kink-choices');
-                const levels = Object.keys(level);
-                for (let l = 0; l < levels.length; l++) {
-                    const levelName = levels[l];
-                    $('<button>')
-                        .addClass('choice')
-                        .addClass(level[levelName])
-                        .data('level', levelName)
-                        .attr('title', levelName)
-                        .appendTo($choices)
-                        .on('click', (e) => {
-                            for (const selected of e.target.parentElement.getElementsByClassName('selected')) {
-                                selected.classList.remove('selected');
-                            }
-                            e.target.classList.add('selected');
-                            const path = `${strToClass(catName)}/${strToClass(name)}/${strToClass(fieldName)}`;
-                            const value = strToClass(levelName);
-                            console.log('Setting', path, 'to', value);
-                            localStorage[path] = value;
-                        });
+        for (const name of category.kinks) {
+            const $row = document.createElement('tr');
+            $row.classList.add('kink-type', TYPE_PREFIX + strToClass(name));
+            $row.dataset['kink'] = name;
+            for (const fieldName of category.fields) {
+                const $td = document.createElement('td');
+                const $choices = document.createElement('div');
+                $choices.classList.add('kink-choices', CHOICE_PREFIX + strToClass(fieldName));
+                $choices.dataset['field'] = fieldName;
+                for (const levelName of Object.keys(level)) {
+                    const $button = document.createElement('button');
+                    $button.classList.add('choice', level[levelName]);
+                    $button.dataset['level'] = levelName;
+                    $button.addEventListener('click', (e) => {
+                        for (const selected of e.target.parentElement.getElementsByClassName('selected')) {
+                            selected.classList.remove('selected');
+                        }
+                        e.target.classList.add('selected');
+                        const path = `${strToClass(catName)}/${strToClass(name)}/${strToClass(fieldName)}`;
+                        const value = strToClass(levelName);
+                        console.log('Setting', path, 'to', value);
+                        localStorage[path] = value;
+                    });
+                    $choices.append($button);
                 }
-                $choices.data('field', fieldName);
-                $choices.addClass(CHOICE_PREFIX + strToClass(fieldName));
-                $('<td>').append($choices).appendTo($row);
+                $td.append($choices);
+                $row.append($td);
             }
-            $('<td>').text(name).appendTo($row);
-            $row.addClass(TYPE_PREFIX + strToClass(name));
+            const $td = document.createElement('td');
+            $td.textContent = name;
+            $row.append($td);
             $tbody.append($row);
         }
         inputList.append($category);
@@ -76,25 +85,6 @@ const restoreState = () => {
 };
 
 const inputKinks = {
-    createCategory: function (name, fields) {
-        const $category = $('<div class="kink-category">')
-            .addClass(CATEGORY_PREFIX + strToClass(name))
-            .data('category', name)
-            .append($('<h2>')
-                .text(name));
-
-        const $table = $('<table>').data('fields', fields);
-        const $thead = $('<thead>').appendTo($table);
-        for (const field of fields) {
-            $('<th>').addClass('choicesCol').text(field).appendTo($thead);
-        }
-        $('<th>').appendTo($thead);
-        $('<tbody>').appendTo($table);
-
-        $category.append($table);
-
-        return $category;
-    },
     drawLegend: function (context) {
         context.font = "bold 13px Arial";
         context.fillStyle = '#000000';
