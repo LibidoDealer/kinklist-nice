@@ -5,31 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script>
-        const updateInputWidth = (element) => {
-            const content = element.value || element.placeholder;
-            const span = document.createElement("span");
-            span.innerHTML = content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            element.parentElement.appendChild(span)
-            const theWidth = span.getBoundingClientRect().width;
-            element.parentElement.removeChild(span);
-            element.style.width = `${theWidth}px`;
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const nameInput = document.getElementById('name');
-            const originalTitle = document.title;
-            updateInputWidth(nameInput);
-            nameInput.addEventListener('input', (e) => {
-                updateInputWidth(e.target);
-                if (e.target.value.length > 0) {
-                    document.title = `${e.target.value}'s ${originalTitle}`;
-                } else {
-                    document.title = originalTitle;
-                }
-            });
-        });
-    </script>
+    <script src="input.js"></script>
     <link rel="icon" href="favicon.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="overlay.css">
