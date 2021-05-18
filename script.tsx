@@ -9,6 +9,72 @@ const strToClass = (str) => {
 let kinks = {};
 let colors = {}
 let level = {};
+
+const setupDOM = () => {
+    const inputList = $('#InputList');
+    inputList.empty();
+
+    let kinkCats = Object.keys(kinks);
+    for (let i = 0; i < kinkCats.length; i++) {
+        const catName = kinkCats[i];
+        const category = kinks[catName];
+        const fields = category.fields;
+        const kinkArr = category.kinks;
+
+        const $category = inputKinks.createCategory(catName, fields);
+        const $tbody = $category.find('tbody');
+        for (let k = 0; k < kinkArr.length; k++) {
+            const name = kinkArr[k];
+            const $row = $('<tr>').data('kink', name).addClass('kink-type');
+            for (let j = 0; j < fields.length; j++) {
+                const fieldName = fields[j];
+                const $choices = $('<div>').addClass('kink-choices');
+                const levels = Object.keys(level);
+                for (let l = 0; l < levels.length; l++) {
+                    const levelName = levels[l];
+                    $('<button>')
+                        .addClass('choice')
+                        .addClass(level[levelName])
+                        .data('level', levelName)
+                        .attr('title', levelName)
+                        .appendTo($choices)
+                        .on('click', (e) => {
+                            for (const selected of e.target.parentElement.getElementsByClassName('selected')) {
+                                selected.classList.remove('selected');
+                            }
+                            e.target.classList.add('selected');
+                            const path = `${strToClass(catName)}/${strToClass(name)}/${strToClass(fieldName)}`;
+                            const value = strToClass(levelName);
+                            console.log('Setting', path, 'to', value);
+                            localStorage[path] = value;
+                        });
+                }
+                $choices.data('field', fieldName);
+                $choices.addClass(CHOICE_PREFIX + strToClass(fieldName));
+                $('<td>').append($choices).appendTo($row);
+            }
+            $('<td>').text(name).appendTo($row);
+            $row.addClass(TYPE_PREFIX + strToClass(name));
+            $tbody.append($row);
+        }
+        inputList.append($category);
+    }
+};
+
+const restoreState = () => {
+    for (const path in localStorage) {
+        if (localStorage.hasOwnProperty(path) && path.indexOf('/') >= 0) {
+            const bits = path.split('/');
+            try {
+                document.querySelector(`.${CATEGORY_PREFIX}${bits[0]} .${TYPE_PREFIX}${bits[1]} .${CHOICE_PREFIX}${bits[2]} .${localStorage[path]}`).classList.add('selected');
+            } catch (e) {
+                console.warn('Error restoring', bits);
+                localStorage.removeItem(path);
+            }
+        }
+    }
+};
+
 const inputKinks = {
     createCategory: function (name, fields) {
         const $category = $('<div class="kink-category">')
@@ -28,66 +94,6 @@ const inputKinks = {
         $category.append($table);
 
         return $category;
-    },
-    fillInputList: function () {
-        const inputList = $('#InputList');
-        inputList.empty();
-
-        let kinkCats = Object.keys(kinks);
-        for (let i = 0; i < kinkCats.length; i++) {
-            const catName = kinkCats[i];
-            const category = kinks[catName];
-            const fields = category.fields;
-            const kinkArr = category.kinks;
-
-            const $category = inputKinks.createCategory(catName, fields);
-            const $tbody = $category.find('tbody');
-            for (let k = 0; k < kinkArr.length; k++) {
-                const name = kinkArr[k];
-                const $row = $('<tr>').data('kink', name).addClass('kink-type');
-                for (let j = 0; j < fields.length; j++) {
-                    const fieldName = fields[j];
-                    const $choices = $('<div>').addClass('kink-choices');
-                    const levels = Object.keys(level);
-                    for (let l = 0; l < levels.length; l++) {
-                        const levelName = levels[l];
-                        $('<button>')
-                            .addClass('choice')
-                            .addClass(level[levelName])
-                            .data('level', levelName)
-                            .attr('title', levelName)
-                            .appendTo($choices)
-                            .on('click', (e) => {
-                                for (const selected of e.target.parentElement.getElementsByClassName('selected')) {
-                                    selected.classList.remove('selected');
-                                }
-                                e.target.classList.add('selected');
-                                const path = `${strToClass(catName)}/${strToClass(name)}/${strToClass(fieldName)}`;
-                                const value = strToClass(levelName);
-                                console.log('Setting', path, 'to', value);
-                                localStorage[path] = value;
-                            });
-                    }
-                    $choices.data('field', fieldName);
-                    $choices.addClass(CHOICE_PREFIX + strToClass(fieldName));
-                    $('<td>').append($choices).appendTo($row);
-                }
-                $('<td>').text(name).appendTo($row);
-                $row.addClass(TYPE_PREFIX + strToClass(name));
-                $tbody.append($row);
-            }
-            inputList.append($category);
-        }
-    },
-    init: function () {
-        // Set up DOM
-        inputKinks.fillInputList();
-
-        // Read hash
-        inputKinks.restoreState();
-
-        // Make export button work
-        $('#Export').on('click', inputKinks.export);
     },
     drawLegend: function (context) {
         context.font = "bold 13px Arial";
@@ -146,7 +152,7 @@ const inputKinks = {
             context.font = "italic 12px Arial";
             context.fillText(fieldsStr, drawCall.x, drawCall.y + 20);
         },
-        kinkRow: function (context, drawCall) {
+        'kink-type': function (context, drawCall) {
             context.fillStyle = '#000000';
             context.font = "12px Arial";
 
@@ -174,10 +180,6 @@ const inputKinks = {
         }
     },
     export: function () {
-        let username = prompt("Please enter your name");
-        if (typeof username !== 'string' || !username.length) {
-            return;
-        }
         const kinkCategory = $('.kink-category');
 
         // Constants
@@ -285,7 +287,8 @@ const inputKinks = {
 
         let canvasWidth = offsets.left + offsets.right + (columnWidth * numCols);
         let canvasHeight = offsets.top + offsets.bottom + tallestColumnHeight;
-        let setup = inputKinks.setupCanvas(canvasWidth, canvasHeight, username);
+        const owner = document.getElementById('name').value;
+        let setup = inputKinks.setupCanvas(canvasWidth, canvasHeight, owner);
         let context = setup.context;
         let canvas = setup.canvas;
 
@@ -305,21 +308,8 @@ const inputKinks = {
         // Save image
         let pom = document.createElement('a');
         pom.setAttribute('href', canvas.toDataURL());
-        pom.setAttribute('download', username + '.png');
+        pom.setAttribute('download', owner.replaceAll(/[^a-zA-Z]+/g, '_') + '.png');
         pom.click();
-    },
-    restoreState: function () {
-        for (const path in localStorage) {
-            if (localStorage.hasOwnProperty(path)) {
-                const bits = path.split('/');
-                try {
-                    document.querySelector(`.${CATEGORY_PREFIX}${bits[0]} .${TYPE_PREFIX}${bits[1]} .${CHOICE_PREFIX}${bits[2]} .${localStorage[path]}`).classList.add('selected');
-                } catch (e) {
-                    console.warn('Error restoring', bits);
-                    localStorage.removeItem(path);
-                }
-            }
-        }
     },
     saveSelection: function () {
         let selection = [];
@@ -420,8 +410,8 @@ $('#EditOverlay').on('click', function () {
     $(this).fadeOut();
 });
 $('#Clear').on('click', function () {
-    localStorage.choices = [];
-    inputKinks.fillInputList();
+    localStorage.clear();
+    setupDOM();
 });
 $('#KinksOK').on('click', function () {
     let selection = inputKinks.saveSelection();
@@ -452,7 +442,9 @@ $('.legend .choice').each(function () {
 });
 
 kinks = inputKinks.parseKinksText($('#Kinks').text().trim());
-inputKinks.init();
+setupDOM();
+restoreState();
+$('#export').on('click', inputKinks.export);
 
 let $popup = $('#InputOverlay');
 let $previous = $('#InputPrevious');
