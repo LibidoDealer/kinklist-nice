@@ -22,10 +22,10 @@ const updateOwner = (target: HTMLInputElement) => {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const nameInput = document.getElementById('name');
+    const nameInput = document.getElementById('name') as HTMLInputElement;
     if (localStorage.owner !== undefined) {
         nameInput.value = localStorage.owner;
     }
     updateOwner(nameInput);
-    nameInput.addEventListener('input', updateOwner);
+    nameInput.addEventListener('input', (event: InputEvent) => updateOwner(event.target as HTMLInputElement));
 });
