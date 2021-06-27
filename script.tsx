@@ -306,57 +306,6 @@ const inputKinks = {
         const filename = owner.length ? owner.replace(/[^a-zA-Z]+/g, '_') : 'kink_list';
         pom.setAttribute('download', filename + '.png');
         pom.click();
-    },
-    parseKinksText: function (kinksText) {
-        let newKinks = {};
-        let lines = kinksText.replace(/\r/g, '').split("\n");
-
-        let cat = null;
-        let catName = null;
-        for (let i = 0; i < lines.length; i++) {
-            let line = lines[i];
-            if (!line.length) continue;
-
-            if (line[0] === '#') {
-                if (catName) {
-                    if (!(cat.fields instanceof Array) || cat.fields.length < 1) {
-                        alert(catName + ' does not have any fields defined!');
-                        return;
-                    }
-                    if (!(cat.kinks instanceof Array) || cat.kinks.length < 1) {
-                        alert(catName + ' does not have any kinks listed!');
-                        return;
-                    }
-                    newKinks[catName] = cat;
-                }
-                catName = line.substring(1).trim();
-                cat = {kinks: []};
-            }
-            if (!catName) continue;
-            if (line[0] === '(') {
-                cat.fields = line.substring(1, line.length - 1).trim().split(',');
-                for (let j = 0; j < cat.fields.length; j++) {
-                    cat.fields[j] = cat.fields[j].trim();
-                }
-            }
-            if (line[0] === '*') {
-                let kink = line.substring(1).trim();
-                cat.kinks.push(kink);
-            }
-        }
-        if (catName && !newKinks[catName]) {
-            if (!(cat.fields instanceof Array) || cat.fields.length < 1) {
-                alert(catName + ' does not have any fields defined!');
-                return;
-            }
-            if (!(cat.kinks instanceof Array) || cat.kinks.length < 1) {
-                alert(catName + ' does not have any kinks listed!');
-                return;
-            }
-            newKinks[catName] = cat;
-        }
-        console.log(newKinks);
-        return newKinks;
     }
 };
 
@@ -377,7 +326,232 @@ $('.legend .choice').each(function () {
     level[text] = cssClass;
 });
 
-kinks = inputKinks.parseKinksText($('#Kinks').text().trim());
+kinks = {
+    'Bodies': {
+        'fields': ['General'],
+        'kinks': [
+            'Skinny',
+            'Chubby',
+            'Small breasts',
+            'Large breasts',
+            'Small cock',
+            'Large cock',
+            'Small ass',
+            'Large ass',
+            'Piercings',
+            'Tattoos',
+            'Pubic hair',
+            'Shaved pubic hair',
+            'Facial hair',
+            'Body hair',
+            'Legs / Feet',
+        ]
+    },
+    'Outfit': {
+        'fields': ['Self', 'Partner'],
+        'kinks': [
+            'Lingerie',
+            'Pantyhouse / Stockings',
+            'Heels',
+            'Leather',
+            'Latex',
+            'Cross-dressing',
+            'Cosplay',
+            'Business suits',
+            'Goth',
+            'School Uniform',
+            'Maid Uniforms',
+            'Cheerleading Uniforms',
+            'Knee High Socks',
+        ]
+    },
+    'General': {
+        'fields': ['Giving', 'Receiving'],
+        'kinks': [
+            'Handjob / fingering',
+            'Blowjob',
+            'Deep throat',
+            'Swallowing',
+            'Facials',
+            'Cunnilingus',
+            'Face sitting / fucking',
+            'Rough sex',
+            'Sleepy Sex',
+            'JOI, SI',
+            'Multiple orgasms',
+            'Creampie',
+            'Tit fucking',
+        ]
+    },
+    'Ass play': {
+        'fields': ['Giving', 'Receiving'],
+        'kinks': [
+            'Anal toys',
+            'Anal sex, pegging',
+            'Rimming',
+            'Double penetration',
+            'Anal Fingering',
+            'Anal fisting',
+            'Anal Creampie',
+        ]
+    },
+    'Restrictive': {
+        'fields': ['Self', 'Partner'],
+        'kinks': [
+            'Gag',
+            'Collar',
+            'Leash',
+            'Chastity',
+            'Bondage',
+            'Encasement',
+            'Blindfold',
+            'Shibari',
+        ]
+    },
+    'Toys': {
+        'fields': ['Self', 'Partner'],
+        'kinks': [
+            'Dildos',
+            'Plugs',
+            'Vibrators',
+            'Strap-on',
+            'Remote controlled',
+            'Glass Dildos',
+        ]
+    },
+    'Domination': {
+        'fields': ['Dominant', 'Submissive'],
+        'kinks': [
+            'Dominant / Submissive',
+            'Domestic servitude',
+            'Pet play',
+            'DD/lg, MD/lb',
+            'Obedience training',
+            'Forced orgasm',
+            'Orgasm control',
+            'Power exchange',
+            'Mind control',
+        ]
+    },
+    'No consent': {
+        'fields': ['Aggressor', 'Target'],
+        'kinks': [
+            'Non-con / rape',
+            'Blackmail / coercion',
+            'Kidnapping',
+            'Drugs / alcohol',
+        ]
+    },
+    'Taboo': {
+        'fields': ['General'],
+        'kinks': [
+            'Incest',
+            'Ageplay',
+            'Interracial / Raceplay',
+            'Bestiality',
+            'Necrophilia',
+            'Exhibitionism',
+            'Voyeurism',
+        ]
+    },
+    'Fluids': {
+        'fields': ['General'],
+        'kinks': [
+            'Blood',
+            'Watersports',
+            'Scat',
+            'Lactation',
+            'Diapers',
+            'Cum play',
+        ]
+    },
+    'Degradation': {
+        'fields': ['Giving', 'Receiving'],
+        'kinks': [
+            'Name calling',
+            'Humiliation',
+            'Cuckold',
+        ]
+    },
+    'Touch & Stimulation': {
+        'fields': ['Actor', 'Subject'],
+        'kinks': [
+            'Cock/Pussy worship',
+            'Ass worship',
+            'Foot play',
+            'Tickling',
+            'Sensation play',
+            'Sensory deprivation',
+        ]
+    },
+    'Roleplay': {
+        'fields': ['General'],
+        'kinks': [
+            'Daddy/babygirl',
+            'Mommy/babyboy',
+            'Sister/Brother',
+            'Master/Slave',
+        ]
+    },
+    'Situations': {
+        'fields': ['Self / partner', 'Partner / self'],
+        'kinks': [
+            'Doctor/nurse',
+            'Mistress/slave',
+            'Teacher/student',
+            'Nun/priest',
+            'Boss/Secretary',
+        ]
+    },
+    'Surrealism': {
+        'fields': ['Self', 'Partner'],
+        'kinks': [
+            'Futanari',
+            'Furry',
+            'Vore',
+            'Tentacles',
+            'Monster or Alien',
+        ]
+    },
+    'Misc. Fetish': {
+        'fields': ['Giving', 'Receiving'],
+        'kinks': [
+            'Fisting',
+            'Gangbang',
+            'Breath play',
+            'Feminization',
+            'Age play',
+            'Choking play',
+            'Squirting',
+            'Shower Sex',
+        ]
+    },
+    'Exposure': {
+        'fields': ['Self', 'Partner'],
+        'kinks': [
+            'Erotic Photos/Videos',
+            'Exhibitionism',
+            'Outdoor sex',
+            'Flashing',
+            'Butt plugs in public',
+            'Remote controlled toys',
+        ]
+    },
+    'Pain': {
+        'fields': ['Giving', 'Receiving'],
+        'kinks': [
+            'Hair Pulling',
+            'Nipple clamps',
+            'Whips / Flogging',
+            'Spanking / paddling',
+            'Cock/Pussy torture',
+            'Hot Wax',
+            'Scratching',
+            'Biting',
+            'Cutting',
+        ]
+    },
+};
 setupDOM();
 restoreState();
 $('#export').on('click', inputKinks.export);
