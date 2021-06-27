@@ -591,7 +591,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setupDOM();
     restoreState();
-    $('#export').on('click', exportFns.export);
+    document.getElementById('export').addEventListener('click', exportFns.export);
 
     // Add level styles
     const style = document.createElement('style');
@@ -603,11 +603,10 @@ document.addEventListener('DOMContentLoaded', () => {
         legend.innerHTML += `<li><div class="choice ${level.class}"></div> <span class="legend-text">${levelsKey}</span></li>`;
     }
 
-    // Register clear
-    $('#Clear').on('click', () => {
+    document.getElementById('Clear').addEventListener('click', (): void => {
         localStorage.clear();
         nameInput.value = '';
         updateOwner(nameInput);
         setupDOM();
-    });
+    })
 });
