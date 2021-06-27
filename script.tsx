@@ -497,8 +497,8 @@ const exportFns = {
         // for the appropriate column
         let avgColHeight = totalHeight / numCols;
         let columnIndex = 0;
-        kinkCategory.each(() => {
-            let $cat = $(this);
+        kinkCategory.each((_, e) => {
+            let $cat = $(e);
             let catName = $cat.data('category');
             let category = kinks[catName];
             let fields = category.fields;
@@ -534,9 +534,9 @@ const exportFns = {
             }
 
             // Drawcalls for kinks
-            $cat.find('.kink-type').each(() => {
-                let $kinkRow = $(this);
-                let drawCall = {
+            $cat.find('.kink-type').each(function () {
+                const $kinkRow = $(this);
+                const drawCall = {
                     y: column.height, type: 'kink-type', data: {
                         choices: [],
                         text: $kinkRow.data('kink')
