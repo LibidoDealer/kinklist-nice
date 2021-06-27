@@ -428,7 +428,6 @@ const inputKinks = {
                 context.lineWidth = 1;
                 context.stroke();
             }
-
         }
     },
     export: function () {
