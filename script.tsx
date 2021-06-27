@@ -232,8 +232,36 @@ const kinks = {
         ]
     },
 };
-let colors = {}
-let level = {};
+const levels = {
+    'Irrelevant': {
+        'colour': '#FFFFFF',
+        'class': 'irrelevant',
+    },
+    'Favourite': {
+        'colour': '#6DB5FE',
+        'class': 'favourite',
+    },
+    'Like': {
+        'colour': '#88FC79',
+        'class': 'like',
+    },
+    'Curious': {
+        'colour': '#F9BDF1',
+        'class': 'curious',
+    },
+    'Okay': {
+        'colour': '#FDFD6B',
+        'class': 'okay',
+    },
+    'Indifferent': {
+        'colour': '#DB6C00',
+        'class': 'indifferent',
+    },
+    'Turn Off': {
+        'colour': '#920000',
+        'class': 'turn-off',
+    },
+};
 
 const updateOwner = (target: HTMLInputElement) => {
     // Update title
@@ -299,9 +327,9 @@ const setupDOM = () => {
                 const $choices = document.createElement('div');
                 $choices.classList.add('kink-choices', CHOICE_PREFIX + strToClass(fieldName));
                 $choices.dataset['field'] = fieldName;
-                for (const levelName of Object.keys(level)) {
+                for (const levelName of Object.keys(levels)) {
                     const $button = document.createElement('button');
-                    $button.classList.add('choice', level[levelName]);
+                    $button.classList.add('choice', levels[levelName].class);
                     $button.dataset['level'] = levelName;
                     $button.addEventListener('click', (e) => {
                         const target = e.target as HTMLElement;
@@ -347,19 +375,19 @@ const exportFns = {
         context.font = "bold 13px Arial";
         context.fillStyle = '#000000';
 
-        let levels = Object.keys(colors);
-        let x = context.canvas.width - 15 - (120 * levels.length);
-        for (let i = 0; i < levels.length; i++) {
+        let levelsToRename = Object.keys(levels);
+        let x = context.canvas.width - 15 - (120 * levelsToRename.length);
+        for (let i = 0; i < levelsToRename.length; i++) {
             context.beginPath();
             context.arc(x + (120 * i), 17, 8, 0, 2 * Math.PI, false);
-            context.fillStyle = colors[levels[i]];
+            context.fillStyle = levels[levelsToRename[i]].colour;
             context.fill();
             context.strokeStyle = 'rgba(0, 0, 0, 0.5)'
             context.lineWidth = 1;
             context.stroke();
 
             context.fillStyle = '#000000';
-            context.fillText(levels[i], x + 15 + (i * 120), 22);
+            context.fillText(levelsToRename[i], x + 15 + (i * 120), 22);
         }
     },
     setupCanvas: (width: number, height: number, username: string) => {
@@ -415,7 +443,7 @@ const exportFns = {
             // Circles
             for (let i = 0; i < drawCall.data.choices.length; i++) {
                 let choice = drawCall.data.choices[i];
-                let color = colors[choice];
+                let color = levels[choice].colour;
 
                 let x = 10 + drawCall.x + (i * 20);
                 let y = drawCall.y - 10;
@@ -522,7 +550,7 @@ const exportFns = {
                     let $selection = $(this).find('.choice.selected');
                     let selection = ($selection.length > 0)
                         ? $selection.data('level')
-                        : Object.keys(level)[0];
+                        : Object.keys(levels)[0];
 
                     drawCall.data.choices.push(selection);
                 });
@@ -570,18 +598,12 @@ $('#Clear').on('click', () => {
     setupDOM();
 });
 
-$('.legend .choice').each(() => {
-    const $choice = $(this);
-    const $parent = $choice.parent();
-    const text = $parent.text().trim();
-    const color = $choice.data('color');
-    const cssClass = this.className.replace('choice ', '').trim();
-
-    document.styleSheets[0].insertRule(`.choice.${cssClass} { background-color: ${color}; }`, 0);
-    colors[text] = color;
-    level[text] = cssClass;
-});
-
 setupDOM();
 restoreState();
 $('#export').on('click', exportFns.export);
+
+for (let levelsKey in levels) {
+    const level = levels[levelsKey];
+    document.styleSheets[0].insertRule(`.choice.${level.class} { background-color: ${level.colour} !important; }`, 0);
+    console.log('Adding rule for', level);
+}
