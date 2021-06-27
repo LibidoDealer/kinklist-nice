@@ -394,7 +394,7 @@ const exportFns = {
         });
 
         let context = canvas.getContext('2d');
-        context.fillStyle = '#FFFFFF';
+        context.fillStyle = 'rgba(255, 255, 255, 0.7)';
         context.fillRect(0, 0, canvas.width, canvas.height);
 
         context.font = "bold 24px Arial";
