@@ -343,7 +343,7 @@ const restoreState = () => {
 };
 
 const exportFns = {
-    drawLegend: function (context) {
+    drawLegend: (context) => {
         context.font = "bold 13px Arial";
         context.fillStyle = '#000000';
 
@@ -362,7 +362,7 @@ const exportFns = {
             context.fillText(levels[i], x + 15 + (i * 120), 22);
         }
     },
-    setupCanvas: function (width: number, height: number, username: string) {
+    setupCanvas: (width: number, height: number, username: string) => {
         $('canvas').remove();
         let canvas = document.createElement('canvas');
         canvas.width = width;
@@ -390,12 +390,12 @@ const exportFns = {
         return {context: context, canvas: canvas};
     },
     drawCallHandlers: {
-        simpleTitle: function (context, drawCall) {
+        simpleTitle: (context, drawCall) => {
             context.fillStyle = '#000000';
             context.font = "bold 18px Arial";
             context.fillText(drawCall.data, drawCall.x, drawCall.y + 5);
         },
-        titleSubtitle: function (context, drawCall) {
+        titleSubtitle: (context, drawCall) => {
             context.fillStyle = '#000000';
             context.font = "bold 18px Arial";
             context.fillText(drawCall.data.category, drawCall.x, drawCall.y + 5);
@@ -404,7 +404,7 @@ const exportFns = {
             context.font = "italic 12px Arial";
             context.fillText(fieldsStr, drawCall.x, drawCall.y + 20);
         },
-        'kink-type': function (context, drawCall) {
+        'kink-type': (context, drawCall) => {
             context.fillStyle = '#000000';
             context.font = "12px Arial";
 
@@ -430,7 +430,7 @@ const exportFns = {
             }
         }
     },
-    export: function () {
+    export: () => {
         const kinkCategory = $('.kink-category');
 
         // Constants
@@ -469,7 +469,7 @@ const exportFns = {
         // for the appropriate column
         let avgColHeight = totalHeight / numCols;
         let columnIndex = 0;
-        kinkCategory.each(function () {
+        kinkCategory.each(() => {
             let $cat = $(this);
             let catName = $cat.data('category');
             let category = kinks[catName];
@@ -506,7 +506,7 @@ const exportFns = {
             }
 
             // Drawcalls for kinks
-            $cat.find('.kink-type').each(function () {
+            $cat.find('.kink-type').each(() => {
                 let $kinkRow = $(this);
                 let drawCall = {
                     y: column.height, type: 'kink-type', data: {
@@ -518,7 +518,7 @@ const exportFns = {
                 column.height += rowHeight;
 
                 // Add choices
-                $kinkRow.find('.kink-choices').each(function () {
+                $kinkRow.find('.kink-choices').each(() => {
                     let $selection = $(this).find('.choice.selected');
                     let selection = ($selection.length > 0)
                         ? $selection.data('level')
@@ -565,12 +565,12 @@ const exportFns = {
     }
 };
 
-$('#Clear').on('click', function () {
+$('#Clear').on('click', () => {
     localStorage.clear();
     setupDOM();
 });
 
-$('.legend .choice').each(function () {
+$('.legend .choice').each(() => {
     const $choice = $(this);
     const $parent = $choice.parent();
     const text = $parent.text().trim();
