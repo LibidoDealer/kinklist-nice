@@ -342,7 +342,7 @@ const restoreState = () => {
     }
 };
 
-const inputKinks = {
+const exportFuncs = {
     drawLegend: function (context) {
         context.font = "bold 13px Arial";
         context.fillStyle = '#000000';
@@ -386,7 +386,7 @@ const inputKinks = {
             context.fillText('Kink List', 5, 25);
         }
 
-        inputKinks.drawLegend(context);
+        exportFuncs.drawLegend(context);
         return {context: context, canvas: canvas};
     },
     drawCallHandlers: {
@@ -539,7 +539,7 @@ const inputKinks = {
         let canvasWidth = offsets.left + offsets.right + (columnWidth * numCols);
         let canvasHeight = offsets.top + offsets.bottom + tallestColumnHeight;
         const owner = (document.getElementById('name') as HTMLInputElement).value;
-        let setup = inputKinks.setupCanvas(canvasWidth, canvasHeight, owner);
+        let setup = exportFuncs.setupCanvas(canvasWidth, canvasHeight, owner);
         let context = setup.context;
         let canvas = setup.canvas;
 
@@ -552,7 +552,7 @@ const inputKinks = {
                 let drawCall = drawStack[j];
                 drawCall.x = drawX;
                 drawCall.y += offsets.top;
-                inputKinks.drawCallHandlers[drawCall.type](context, drawCall);
+                exportFuncs.drawCallHandlers[drawCall.type](context, drawCall);
             }
         }
 
@@ -584,4 +584,4 @@ $('.legend .choice').each(function () {
 
 setupDOM();
 restoreState();
-$('#export').on('click', inputKinks.export);
+$('#export').on('click', exportFuncs.export);
