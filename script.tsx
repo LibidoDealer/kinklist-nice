@@ -582,12 +582,6 @@ const exportFns = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    $('#Clear').on('click', () => {
-        console.log('Clearing');
-        localStorage.clear();
-        setupDOM();
-    });
-
     const nameInput = document.getElementById('name') as HTMLInputElement;
     if (localStorage.owner !== undefined) {
         nameInput.value = localStorage.owner;
@@ -608,4 +602,11 @@ document.addEventListener('DOMContentLoaded', () => {
         style.sheet.insertRule(`.choice.${level.class} { background-color: ${level.colour}; }`, 0);
         legend.innerHTML += `<li><div class="choice ${level.class}"></div> <span class="legend-text">${levelsKey}</span></li>`;
     }
+
+    // Register clear
+    $('#Clear').on('click', () => {
+        localStorage.clear();
+        nameInput.value = '';
+        setupDOM();
+    });
 });
