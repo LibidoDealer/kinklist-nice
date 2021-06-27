@@ -434,7 +434,7 @@ const exportFns = {
             // Circles
             for (let i = 0; i < drawCall.data.choices.length; i++) {
                 const choice = drawCall.data.choices[i];
-                const color = levels[choice].colour;
+                const color = (choice in levels) ? levels[choice].colour : 'rgba(255, 255, 255, 0.5)';
 
                 const x = 10 + drawCall.x + (i * 20);
                 const y = drawCall.y - 10;
@@ -539,12 +539,10 @@ const exportFns = {
                 column.height += rowHeight;
 
                 // Add choices
-                $kinkRow.find('.kink-choices').each(() => {
-                    const $selection = $(this).find('.choice.selected');
-                    const selection = ($selection.length > 0)
-                        ? $selection.data('level')
-                        : Object.keys(levels)[0];
-
+                $kinkRow.find('.kink-choices').each((c, e) => {
+                    const selected = e.getElementsByClassName('selected');
+                    // TODO: Unselected
+                    const selection = (selected.length > 0) ? selected[0].dataset['level'] : null;
                     drawCall.data.choices.push(selection);
                 });
             });
