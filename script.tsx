@@ -534,7 +534,7 @@ const exportFns = {
                 // Add choices
                 $kinkRow.find('.kink-choices').each((c, e) => {
                     const selected = e.getElementsByClassName('selected');
-                    const selection = (selected.length > 0) ? selected[0].dataset['level'] : null;
+                    const selection = (selected.length > 0) ? (selected[0] as HTMLElement).dataset['level'] : null;
                     drawCall.data.choices.push(selection);
                 });
             });
