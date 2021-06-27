@@ -586,12 +586,13 @@ const exportFns = {
     }
 };
 
-$('#Clear').on('click', () => {
-    localStorage.clear();
-    setupDOM();
-});
-
 document.addEventListener('DOMContentLoaded', () => {
+    $('#Clear').on('click', () => {
+        console.log('Clearing');
+        localStorage.clear();
+        setupDOM();
+    });
+
     const nameInput = document.getElementById('name') as HTMLInputElement;
     if (localStorage.owner !== undefined) {
         nameInput.value = localStorage.owner;
