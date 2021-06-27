@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Kink List",
   "main": "script.tsx",
-  "repository": "https://gitlab.home.alen.sh/alen/kink-list",
-  "author": "Alen Buhanec <alen.buhanec@gmail.com>",
+  "repository": "",
+  "author": "Alen",
   "license": "MIT",
   "dependencies": {
     "@types/jquery": "^3.5.5",
