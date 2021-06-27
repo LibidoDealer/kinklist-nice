@@ -2,8 +2,8 @@ const CATEGORY_PREFIX = 'category-';
 const TYPE_PREFIX = 'type-';
 const CHOICE_PREFIX = 'choice-';
 
-const strToClass = (str) => {
-    return str.toLowerCase().replaceAll(/[^a-z]+/g, '-');
+const strToClass = (str: string) => {
+    return str.toLowerCase().replace(/[^a-z]+/g, '-');
 }
 
 let kinks = {};
@@ -18,10 +18,10 @@ const setupDOM = () => {
         const category = kinks[catName];
 
         const $category = $('<div class="kink-category">')
-            .addClass(CATEGORY_PREFIX + strToClass(name))
-            .data('category', name)
+            .addClass(CATEGORY_PREFIX + strToClass(catName))
+            .data('category', catName)
             .append($('<h2>')
-                .text(name));
+                .text(catName));
 
         const $table = $('<table>').data('fields', category.fields);
         const $thead = $('<thead>').appendTo($table);
@@ -47,10 +47,11 @@ const setupDOM = () => {
                     $button.classList.add('choice', level[levelName]);
                     $button.dataset['level'] = levelName;
                     $button.addEventListener('click', (e) => {
-                        for (const selected of e.target.parentElement.getElementsByClassName('selected')) {
+                        const target = e.target as HTMLElement;
+                        for (const selected of target.parentElement.getElementsByClassName('selected')) {
                             selected.classList.remove('selected');
                         }
-                        e.target.classList.add('selected');
+                        target.classList.add('selected');
                         const path = `${strToClass(catName)}/${strToClass(name)}/${strToClass(fieldName)}`;
                         const value = strToClass(levelName);
                         console.log('Setting', path, 'to', value);
@@ -104,7 +105,7 @@ const inputKinks = {
             context.fillText(levels[i], x + 15 + (i * 120), 22);
         }
     },
-    setupCanvas: function (width, height, username) {
+    setupCanvas: function (width: number, height: number, username: string) {
         $('canvas').remove();
         let canvas = document.createElement('canvas');
         canvas.width = width;
@@ -122,7 +123,11 @@ const inputKinks = {
 
         context.font = "bold 24px Arial";
         context.fillStyle = '#000000';
-        context.fillText(`${username}'s Kink List`, 5, 25);
+        if (username.length > 0) {
+            context.fillText(`${username}'s Kink List`, 5, 25);
+        } else {
+            context.fillText('Kink List', 5, 25);
+        }
 
         inputKinks.drawLegend(context);
         return {context: context, canvas: canvas};
@@ -277,7 +282,7 @@ const inputKinks = {
 
         let canvasWidth = offsets.left + offsets.right + (columnWidth * numCols);
         let canvasHeight = offsets.top + offsets.bottom + tallestColumnHeight;
-        const owner = document.getElementById('name').value;
+        const owner = (document.getElementById('name') as HTMLInputElement).value;
         let setup = inputKinks.setupCanvas(canvasWidth, canvasHeight, owner);
         let context = setup.context;
         let canvas = setup.canvas;
@@ -298,7 +303,8 @@ const inputKinks = {
         // Save image
         let pom = document.createElement('a');
         pom.setAttribute('href', canvas.toDataURL());
-        pom.setAttribute('download', owner.replaceAll(/[^a-zA-Z]+/g, '_') + '.png');
+        const filename = owner.length ? owner.replace(/[^a-zA-Z]+/g, '_') : 'kink_list';
+        pom.setAttribute('download', filename + '.png');
         pom.click();
     },
     saveSelection: function () {
