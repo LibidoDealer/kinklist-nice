@@ -567,6 +567,11 @@ const exportFns = {
             }
         }
 
+        // Stamp URL
+        context.fillStyle = '#000000';
+        context.font = "12px Arial";
+        context.fillText('kinklist.xyz', canvasWidth - 70, canvasHeight - 10);
+
         // Save image
         const pom = document.createElement('a');
         pom.setAttribute('href', canvas.toDataURL());
