@@ -6,7 +6,232 @@ const strToClass = (str: string) => {
     return str.toLowerCase().replace(/[^a-z]+/g, '-');
 }
 
-let kinks = {};
+const kinks = {
+    'Bodies': {
+        'fields': ['General'],
+        'kinks': [
+            'Skinny',
+            'Chubby',
+            'Small breasts',
+            'Large breasts',
+            'Small cock',
+            'Large cock',
+            'Small ass',
+            'Large ass',
+            'Piercings',
+            'Tattoos',
+            'Pubic hair',
+            'Shaved pubic hair',
+            'Facial hair',
+            'Body hair',
+            'Legs / Feet',
+        ]
+    },
+    'Outfit': {
+        'fields': ['Self', 'Partner'],
+        'kinks': [
+            'Lingerie',
+            'Pantyhouse / Stockings',
+            'Heels',
+            'Leather',
+            'Latex',
+            'Cross-dressing',
+            'Cosplay',
+            'Business suits',
+            'Goth',
+            'School Uniform',
+            'Maid Uniforms',
+            'Cheerleading Uniforms',
+            'Knee High Socks',
+        ]
+    },
+    'General': {
+        'fields': ['Giving', 'Receiving'],
+        'kinks': [
+            'Handjob / fingering',
+            'Blowjob',
+            'Deep throat',
+            'Swallowing',
+            'Facials',
+            'Cunnilingus',
+            'Face sitting / fucking',
+            'Rough sex',
+            'Sleepy Sex',
+            'JOI, SI',
+            'Multiple orgasms',
+            'Creampie',
+            'Tit fucking',
+        ]
+    },
+    'Ass play': {
+        'fields': ['Giving', 'Receiving'],
+        'kinks': [
+            'Anal toys',
+            'Anal sex, pegging',
+            'Rimming',
+            'Double penetration',
+            'Anal Fingering',
+            'Anal fisting',
+            'Anal Creampie',
+        ]
+    },
+    'Restrictive': {
+        'fields': ['Self', 'Partner'],
+        'kinks': [
+            'Gag',
+            'Collar',
+            'Leash',
+            'Chastity',
+            'Bondage',
+            'Encasement',
+            'Blindfold',
+            'Shibari',
+        ]
+    },
+    'Toys': {
+        'fields': ['Self', 'Partner'],
+        'kinks': [
+            'Dildos',
+            'Plugs',
+            'Vibrators',
+            'Strap-on',
+            'Remote controlled',
+            'Glass Dildos',
+        ]
+    },
+    'Domination': {
+        'fields': ['Dominant', 'Submissive'],
+        'kinks': [
+            'Dominant / Submissive',
+            'Domestic servitude',
+            'Pet play',
+            'DD/lg, MD/lb',
+            'Obedience training',
+            'Forced orgasm',
+            'Orgasm control',
+            'Power exchange',
+            'Mind control',
+        ]
+    },
+    'No consent': {
+        'fields': ['Aggressor', 'Target'],
+        'kinks': [
+            'Non-con / rape',
+            'Blackmail / coercion',
+            'Kidnapping',
+            'Drugs / alcohol',
+        ]
+    },
+    'Taboo': {
+        'fields': ['General'],
+        'kinks': [
+            'Incest',
+            'Ageplay',
+            'Interracial / Raceplay',
+            'Bestiality',
+            'Necrophilia',
+            'Exhibitionism',
+            'Voyeurism',
+        ]
+    },
+    'Fluids': {
+        'fields': ['General'],
+        'kinks': [
+            'Blood',
+            'Watersports',
+            'Scat',
+            'Lactation',
+            'Diapers',
+            'Cum play',
+        ]
+    },
+    'Degradation': {
+        'fields': ['Giving', 'Receiving'],
+        'kinks': [
+            'Name calling',
+            'Humiliation',
+            'Cuckold',
+        ]
+    },
+    'Touch & Stimulation': {
+        'fields': ['Actor', 'Subject'],
+        'kinks': [
+            'Cock/Pussy worship',
+            'Ass worship',
+            'Foot play',
+            'Tickling',
+            'Sensation play',
+            'Sensory deprivation',
+        ]
+    },
+    'Roleplay': {
+        'fields': ['General'],
+        'kinks': [
+            'Daddy/babygirl',
+            'Mommy/babyboy',
+            'Sister/Brother',
+            'Master/Slave',
+        ]
+    },
+    'Situations': {
+        'fields': ['Self / partner', 'Partner / self'],
+        'kinks': [
+            'Doctor/nurse',
+            'Mistress/slave',
+            'Teacher/student',
+            'Nun/priest',
+            'Boss/Secretary',
+        ]
+    },
+    'Surrealism': {
+        'fields': ['Self', 'Partner'],
+        'kinks': [
+            'Futanari',
+            'Furry',
+            'Vore',
+            'Tentacles',
+            'Monster or Alien',
+        ]
+    },
+    'Misc. Fetish': {
+        'fields': ['Giving', 'Receiving'],
+        'kinks': [
+            'Fisting',
+            'Gangbang',
+            'Breath play',
+            'Feminization',
+            'Age play',
+            'Choking play',
+            'Squirting',
+            'Shower Sex',
+        ]
+    },
+    'Exposure': {
+        'fields': ['Self', 'Partner'],
+        'kinks': [
+            'Erotic Photos/Videos',
+            'Exhibitionism',
+            'Outdoor sex',
+            'Flashing',
+            'Butt plugs in public',
+            'Remote controlled toys',
+        ]
+    },
+    'Pain': {
+        'fields': ['Giving', 'Receiving'],
+        'kinks': [
+            'Hair Pulling',
+            'Nipple clamps',
+            'Whips / Flogging',
+            'Spanking / paddling',
+            'Cock/Pussy torture',
+            'Hot Wax',
+            'Scratching',
+            'Biting',
+            'Cutting',
+        ]
+    },
+};
 let colors = {}
 let level = {};
 
@@ -326,232 +551,158 @@ $('.legend .choice').each(function () {
     level[text] = cssClass;
 });
 
-kinks = {
-    'Bodies': {
-        'fields': ['General'],
-        'kinks': [
-            'Skinny',
-            'Chubby',
-            'Small breasts',
-            'Large breasts',
-            'Small cock',
-            'Large cock',
-            'Small ass',
-            'Large ass',
-            'Piercings',
-            'Tattoos',
-            'Pubic hair',
-            'Shaved pubic hair',
-            'Facial hair',
-            'Body hair',
-            'Legs / Feet',
-        ]
-    },
-    'Outfit': {
-        'fields': ['Self', 'Partner'],
-        'kinks': [
-            'Lingerie',
-            'Pantyhouse / Stockings',
-            'Heels',
-            'Leather',
-            'Latex',
-            'Cross-dressing',
-            'Cosplay',
-            'Business suits',
-            'Goth',
-            'School Uniform',
-            'Maid Uniforms',
-            'Cheerleading Uniforms',
-            'Knee High Socks',
-        ]
-    },
-    'General': {
-        'fields': ['Giving', 'Receiving'],
-        'kinks': [
-            'Handjob / fingering',
-            'Blowjob',
-            'Deep throat',
-            'Swallowing',
-            'Facials',
-            'Cunnilingus',
-            'Face sitting / fucking',
-            'Rough sex',
-            'Sleepy Sex',
-            'JOI, SI',
-            'Multiple orgasms',
-            'Creampie',
-            'Tit fucking',
-        ]
-    },
-    'Ass play': {
-        'fields': ['Giving', 'Receiving'],
-        'kinks': [
-            'Anal toys',
-            'Anal sex, pegging',
-            'Rimming',
-            'Double penetration',
-            'Anal Fingering',
-            'Anal fisting',
-            'Anal Creampie',
-        ]
-    },
-    'Restrictive': {
-        'fields': ['Self', 'Partner'],
-        'kinks': [
-            'Gag',
-            'Collar',
-            'Leash',
-            'Chastity',
-            'Bondage',
-            'Encasement',
-            'Blindfold',
-            'Shibari',
-        ]
-    },
-    'Toys': {
-        'fields': ['Self', 'Partner'],
-        'kinks': [
-            'Dildos',
-            'Plugs',
-            'Vibrators',
-            'Strap-on',
-            'Remote controlled',
-            'Glass Dildos',
-        ]
-    },
-    'Domination': {
-        'fields': ['Dominant', 'Submissive'],
-        'kinks': [
-            'Dominant / Submissive',
-            'Domestic servitude',
-            'Pet play',
-            'DD/lg, MD/lb',
-            'Obedience training',
-            'Forced orgasm',
-            'Orgasm control',
-            'Power exchange',
-            'Mind control',
-        ]
-    },
-    'No consent': {
-        'fields': ['Aggressor', 'Target'],
-        'kinks': [
-            'Non-con / rape',
-            'Blackmail / coercion',
-            'Kidnapping',
-            'Drugs / alcohol',
-        ]
-    },
-    'Taboo': {
-        'fields': ['General'],
-        'kinks': [
-            'Incest',
-            'Ageplay',
-            'Interracial / Raceplay',
-            'Bestiality',
-            'Necrophilia',
-            'Exhibitionism',
-            'Voyeurism',
-        ]
-    },
-    'Fluids': {
-        'fields': ['General'],
-        'kinks': [
-            'Blood',
-            'Watersports',
-            'Scat',
-            'Lactation',
-            'Diapers',
-            'Cum play',
-        ]
-    },
-    'Degradation': {
-        'fields': ['Giving', 'Receiving'],
-        'kinks': [
-            'Name calling',
-            'Humiliation',
-            'Cuckold',
-        ]
-    },
-    'Touch & Stimulation': {
-        'fields': ['Actor', 'Subject'],
-        'kinks': [
-            'Cock/Pussy worship',
-            'Ass worship',
-            'Foot play',
-            'Tickling',
-            'Sensation play',
-            'Sensory deprivation',
-        ]
-    },
-    'Roleplay': {
-        'fields': ['General'],
-        'kinks': [
-            'Daddy/babygirl',
-            'Mommy/babyboy',
-            'Sister/Brother',
-            'Master/Slave',
-        ]
-    },
-    'Situations': {
-        'fields': ['Self / partner', 'Partner / self'],
-        'kinks': [
-            'Doctor/nurse',
-            'Mistress/slave',
-            'Teacher/student',
-            'Nun/priest',
-            'Boss/Secretary',
-        ]
-    },
-    'Surrealism': {
-        'fields': ['Self', 'Partner'],
-        'kinks': [
-            'Futanari',
-            'Furry',
-            'Vore',
-            'Tentacles',
-            'Monster or Alien',
-        ]
-    },
-    'Misc. Fetish': {
-        'fields': ['Giving', 'Receiving'],
-        'kinks': [
-            'Fisting',
-            'Gangbang',
-            'Breath play',
-            'Feminization',
-            'Age play',
-            'Choking play',
-            'Squirting',
-            'Shower Sex',
-        ]
-    },
-    'Exposure': {
-        'fields': ['Self', 'Partner'],
-        'kinks': [
-            'Erotic Photos/Videos',
-            'Exhibitionism',
-            'Outdoor sex',
-            'Flashing',
-            'Butt plugs in public',
-            'Remote controlled toys',
-        ]
-    },
-    'Pain': {
-        'fields': ['Giving', 'Receiving'],
-        'kinks': [
-            'Hair Pulling',
-            'Nipple clamps',
-            'Whips / Flogging',
-            'Spanking / paddling',
-            'Cock/Pussy torture',
-            'Hot Wax',
-            'Scratching',
-            'Biting',
-            'Cutting',
-        ]
-    },
-};
 setupDOM();
 restoreState();
 $('#export').on('click', inputKinks.export);
+
+let $popup = $('#InputOverlay');
+let $previous = $('#InputPrevious');
+let $next = $('#InputNext');
+
+// current
+let $category = $('#InputCategory');
+let $field = $('#InputField');
+let $options = $('#InputValues');
+
+function getChoiceValue($choices) {
+    let $selected = $choices.find('.choice.selected');
+    return $selected.data('level');
+}
+
+function getChoicesElement(category, kink, field) {
+    return $(`.${CATEGORY_PREFIX}${strToClass(category)} .${TYPE_PREFIX}${strToClass(kink)} .${CHOICE_PREFIX}${strToClass(field)}`);
+}
+
+const getAllKinks = function () {
+    let list = [];
+
+    let categories = Object.keys(kinks);
+    for (let i = 0; i < categories.length; i++) {
+        let category = categories[i];
+        let fields = kinks[category].fields;
+        let kinkArr = kinks[category].kinks;
+
+        for (let j = 0; j < fields.length; j++) {
+            let field = fields[j];
+            for (let k = 0; k < kinkArr.length; k++) {
+                let kink = kinkArr[k];
+                let $choices = getChoicesElement(category, kink, field);
+                let value = getChoiceValue($choices);
+                let obj = {
+                    category: category,
+                    kink: kink,
+                    field: field,
+                    value: value,
+                    $choices: $choices,
+                    showField: (fields.length >= 2)
+                };
+                list.push(obj);
+            }
+        }
+    }
+    return list;
+};
+
+const inputPopup = {
+    numPrev: 3,
+    numNext: 3,
+    allKinks: [],
+    kinkByIndex: function (i) {
+        let numKinks = inputPopup.allKinks.length;
+        i = (numKinks + i) % numKinks;
+        return inputPopup.allKinks[i];
+    },
+    generatePrimary: function (kink) {
+        let $container = $('<div>');
+        let btnIndex = 0;
+        $('.legend > div').each(function () {
+            let $btn = $(this).clone();
+            $btn.addClass('big-choice');
+            $btn.appendTo($container);
+
+            $('<span>')
+                .addClass('btn-num-text')
+                .text(btnIndex++)
+                .appendTo($btn)
+
+            let text = $btn.text().trim().replace(/[0-9]/g, '');
+            if (kink.value === text) {
+                $btn.addClass('selected');
+            }
+
+            $btn.on('click', function () {
+                $container.find('.big-choice').removeClass('selected');
+                $btn.addClass('selected');
+                kink.value = text;
+                $options.fadeOut(200, function () {
+                    $options.show();
+                    inputPopup.showNext(undefined);
+                });
+                let choiceClass = strToClass(text);
+                kink.$choices.find('.' + choiceClass).click();
+            });
+        });
+        return $container;
+    },
+    generateSecondary: function (kink) {
+        let $container = $('<div class="kink-simple">');
+        $('<span class="choice">').addClass(level[kink.value]).appendTo($container);
+        $('<span class="txt-category">').text(kink.category).appendTo($container);
+        if (kink.showField) {
+            $('<span class="txt-field">').text(kink.field).appendTo($container);
+        }
+        $('<span class="txt-kink">').text(kink.kink).appendTo($container);
+        return $container;
+    },
+    showIndex: function (index) {
+        $previous.html('');
+        $next.html('');
+        $options.html('');
+        $popup.data('index', index);
+
+        // Current
+        let currentKink = inputPopup.kinkByIndex(index);
+        let $currentKink = inputPopup.generatePrimary(currentKink);
+        $options.append($currentKink);
+        $category.text(currentKink.category);
+        $field.text((currentKink.showField ? '(' + currentKink.field + ') ' : '') + currentKink.kink);
+        $options.append($currentKink);
+
+        // Prev
+        for (let i = inputPopup.numPrev; i > 0; i--) {
+            let prevKink = inputPopup.kinkByIndex(index - i);
+            let $prevKink = inputPopup.generateSecondary(prevKink);
+            $previous.append($prevKink);
+            (function (skip) {
+                $prevKink.on('click', function () {
+                    inputPopup.showPrev(skip);
+                });
+            })(i);
+        }
+        // Next
+        for (let i = 1; i <= inputPopup.numNext; i++) {
+            let nextKink = inputPopup.kinkByIndex(index + i);
+            let $nextKink = inputPopup.generateSecondary(nextKink);
+            $next.append($nextKink);
+            (function (skip) {
+                $nextKink.on('click', function () {
+                    inputPopup.showNext(skip);
+                });
+            })(i);
+        }
+    },
+    showPrev: function (skip) {
+        if (typeof skip !== "number") skip = 1;
+        let index = $popup.data('index') - skip;
+        let numKinks = inputPopup.allKinks.length;
+        index = (numKinks + index) % numKinks;
+        inputPopup.showIndex(index);
+    },
+    showNext: function (skip) {
+        if (typeof skip !== "number") skip = 1;
+        let index = $popup.data('index') + skip;
+        let numKinks = inputPopup.allKinks.length;
+        index = (numKinks + index) % numKinks;
+        inputPopup.showIndex(index);
+    },
+};
