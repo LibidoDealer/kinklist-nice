@@ -2,7 +2,7 @@ const CATEGORY_PREFIX = 'category-';
 const TYPE_PREFIX = 'type-';
 const CHOICE_PREFIX = 'choice-';
 
-const strToClass = (str: string) => {
+const strToClass = (str: string): string => {
     return str.toLowerCase().replace(/[^a-z]+/g, '-');
 }
 
@@ -263,7 +263,7 @@ const levels = {
     },
 };
 
-const updateOwner = (target: HTMLInputElement) => {
+const updateOwner = (target: HTMLInputElement): void => {
     // Update title
     if (target.value.length > 0) {
         document.title = `${target.value}'s Kink List`;
@@ -286,7 +286,7 @@ const updateOwner = (target: HTMLInputElement) => {
     target.style.width = `${theWidth}px`;
 }
 
-const setupDOM = () => {
+const setupDOM = (): void => {
     const inputList = $('#InputList');
     inputList.empty();
 
@@ -347,7 +347,7 @@ const setupDOM = () => {
     }
 };
 
-const restoreState = () => {
+const restoreState = (): void => {
     for (const path in localStorage) {
         if (localStorage.hasOwnProperty(path) && path.indexOf('/') >= 0) {
             const bits = path.split('/');
@@ -362,38 +362,38 @@ const restoreState = () => {
 };
 
 const exportFns = {
-    drawLegend: (context) => {
+    drawLegend: (context: CanvasRenderingContext2D): void => {
         context.font = "bold 13px Arial";
         context.fillStyle = '#000000';
 
-        let levelsToRename = Object.keys(levels);
-        let x = context.canvas.width - 15 - (120 * levelsToRename.length);
-        for (let i = 0; i < levelsToRename.length; i++) {
+        const levelNames = Object.keys(levels);
+        const x = context.canvas.width - 15 - (120 * levelNames.length);
+        for (let i = 0; i < levelNames.length; i++) {
             context.beginPath();
             context.arc(x + (120 * i), 17, 8, 0, 2 * Math.PI, false);
-            context.fillStyle = levels[levelsToRename[i]].colour;
+            context.fillStyle = levels[levelNames[i]].colour;
             context.fill();
             context.strokeStyle = 'rgba(0, 0, 0, 0.5)'
             context.lineWidth = 1;
             context.stroke();
 
             context.fillStyle = '#000000';
-            context.fillText(levelsToRename[i], x + 15 + (i * 120), 22);
+            context.fillText(levelNames[i], x + 15 + (i * 120), 22);
         }
     },
     setupCanvas: (width: number, height: number, username: string) => {
         $('canvas').remove();
-        let canvas = document.createElement('canvas');
+        const canvas = document.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
 
-        let $canvas = $(canvas);
+        const $canvas = $(canvas);
         $canvas.css({
             width: width,
             height: height
         });
 
-        let context = canvas.getContext('2d');
+        const context = canvas.getContext('2d');
         context.fillStyle = 'rgba(255, 255, 255, 0.7)';
         context.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -409,35 +409,35 @@ const exportFns = {
         return {context: context, canvas: canvas};
     },
     drawCallHandlers: {
-        simpleTitle: (context, drawCall) => {
+        simpleTitle: (context: CanvasRenderingContext2D, drawCall): void => {
             context.fillStyle = '#000000';
             context.font = "bold 18px Arial";
             context.fillText(drawCall.data, drawCall.x, drawCall.y + 5);
         },
-        titleSubtitle: (context, drawCall) => {
+        titleSubtitle: (context: CanvasRenderingContext2D, drawCall): void => {
             context.fillStyle = '#000000';
             context.font = "bold 18px Arial";
             context.fillText(drawCall.data.category, drawCall.x, drawCall.y + 5);
 
-            let fieldsStr = drawCall.data.fields.join(', ');
+            const fieldsStr = drawCall.data.fields.join(', ');
             context.font = "italic 12px Arial";
             context.fillText(fieldsStr, drawCall.x, drawCall.y + 20);
         },
-        'kink-type': (context, drawCall) => {
+        'kink-type': (context: CanvasRenderingContext2D, drawCall): void => {
             context.fillStyle = '#000000';
             context.font = "12px Arial";
 
-            let x = drawCall.x + 5 + (drawCall.data.choices.length * 20);
-            let y = drawCall.y - 6;
+            const x = drawCall.x + 5 + (drawCall.data.choices.length * 20);
+            const y = drawCall.y - 6;
             context.fillText(drawCall.data.text, x, y);
 
             // Circles
             for (let i = 0; i < drawCall.data.choices.length; i++) {
-                let choice = drawCall.data.choices[i];
-                let color = levels[choice].colour;
+                const choice = drawCall.data.choices[i];
+                const color = levels[choice].colour;
 
-                let x = 10 + drawCall.x + (i * 20);
-                let y = drawCall.y - 10;
+                const x = 10 + drawCall.x + (i * 20);
+                const y = drawCall.y - 10;
 
                 context.beginPath();
                 context.arc(x, y, 8, 0, 2 * Math.PI, false);
@@ -449,16 +449,16 @@ const exportFns = {
             }
         }
     },
-    export: () => {
+    export: (): void => {
         const kinkCategory = $('.kink-category');
 
         // Constants
-        let numCols = 6;
-        let columnWidth = 250;
-        let simpleTitleHeight = 35;
-        let titleSubtitleHeight = 50;
-        let rowHeight = 25;
-        let offsets = {
+        const numCols = 6;
+        const columnWidth = 250;
+        const simpleTitleHeight = 35;
+        const titleSubtitleHeight = 50;
+        const rowHeight = 25;
+        const offsets = {
             left: 10,
             right: 10,
             top: 50,
@@ -466,34 +466,34 @@ const exportFns = {
         };
 
         // Find out how many we have of everything
-        let numCats = kinkCategory.length;
-        let dualCats = $('.kink-category th + th + th').length;
-        let simpleCats = numCats - dualCats;
-        let numKinks = $('.kink-type').length;
+        const numCats = kinkCategory.length;
+        const dualCats = $('.kink-category th + th + th').length;
+        const simpleCats = numCats - dualCats;
+        const numKinks = $('.kink-type').length;
 
         // Determine the height required for all categories and kinks
-        let totalHeight = (
+        const totalHeight = (
             (numKinks * rowHeight) +
             (dualCats * titleSubtitleHeight) +
             (simpleCats * simpleTitleHeight)
         );
 
         // Initialize columns and drawStacks
-        let columns = [];
+        const columns = [];
         for (let i = 0; i < numCols; i++) {
             columns.push({height: 0, drawStack: []});
         }
 
         // Create drawcalls and place them in the drawStack
         // for the appropriate column
-        let avgColHeight = totalHeight / numCols;
+        const avgColHeight = totalHeight / numCols;
         let columnIndex = 0;
         kinkCategory.each((_, e) => {
-            let $cat = $(e);
-            let catName = $cat.data('category');
-            let category = kinks[catName];
-            let fields = category.fields;
-            let catKinks = category.kinks;
+            const $cat = $(e);
+            const catName = $cat.data('category');
+            const category = kinks[catName];
+            const fields = category.fields;
+            const catKinks = category.kinks;
 
             let catHeight = 0;
             catHeight += (fields.length === 1) ? simpleTitleHeight : titleSubtitleHeight;
@@ -501,8 +501,10 @@ const exportFns = {
 
             // Determine which column to place this category in
             if ((columns[columnIndex].height + (catHeight / 2)) > avgColHeight) columnIndex++;
-            while (columnIndex >= numCols) columnIndex--;
-            let column = columns[columnIndex];
+            while (columnIndex >= numCols) {
+                columnIndex--;
+            }
+            const column = columns[columnIndex];
 
             // Drawcall for title
             const drawCall = {
@@ -538,8 +540,8 @@ const exportFns = {
 
                 // Add choices
                 $kinkRow.find('.kink-choices').each(() => {
-                    let $selection = $(this).find('.choice.selected');
-                    let selection = ($selection.length > 0)
+                    const $selection = $(this).find('.choice.selected');
+                    const selection = ($selection.length > 0)
                         ? $selection.data('level')
                         : Object.keys(levels)[0];
 
@@ -555,20 +557,20 @@ const exportFns = {
             }
         }
 
-        let canvasWidth = offsets.left + offsets.right + (columnWidth * numCols);
-        let canvasHeight = offsets.top + offsets.bottom + tallestColumnHeight;
+        const canvasWidth = offsets.left + offsets.right + (columnWidth * numCols);
+        const canvasHeight = offsets.top + offsets.bottom + tallestColumnHeight;
         const owner = (document.getElementById('name') as HTMLInputElement).value;
-        let setup = exportFns.setupCanvas(canvasWidth, canvasHeight, owner);
-        let context = setup.context;
-        let canvas = setup.canvas;
+        const setup = exportFns.setupCanvas(canvasWidth, canvasHeight, owner);
+        const context = setup.context;
+        const canvas = setup.canvas;
 
         for (let i = 0; i < columns.length; i++) {
-            let column = columns[i];
-            let drawStack = column.drawStack;
+            const column = columns[i];
+            const drawStack = column.drawStack;
 
-            let drawX = offsets.left + (columnWidth * i);
+            const drawX = offsets.left + (columnWidth * i);
             for (let j = 0; j < drawStack.length; j++) {
-                let drawCall = drawStack[j];
+                const drawCall = drawStack[j];
                 drawCall.x = drawX;
                 drawCall.y += offsets.top;
                 exportFns.drawCallHandlers[drawCall.type](context, drawCall);
@@ -576,7 +578,7 @@ const exportFns = {
         }
 
         // Save image
-        let pom = document.createElement('a');
+        const pom = document.createElement('a');
         pom.setAttribute('href', canvas.toDataURL());
         const filename = owner.length ? owner.replace(/[^a-zA-Z]+/g, '_') : 'kink_list';
         pom.setAttribute('download', filename + '.png');
@@ -605,7 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const style = document.createElement('style');
     const legend = document.getElementById('legend');
     document.head.appendChild(style);
-    for (let levelsKey in levels) {
+    for (const levelsKey in levels) {
         const level = levels[levelsKey];
         style.sheet.insertRule(`.choice.${level.class} { background-color: ${level.colour}; }`, 0);
         legend.innerHTML += `<li><div class="choice ${level.class}"></div> <span class="legend-text">${levelsKey}</span></li>`;
