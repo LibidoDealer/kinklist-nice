@@ -602,8 +602,11 @@ setupDOM();
 restoreState();
 $('#export').on('click', exportFns.export);
 
+
+// Add level styles
+const style = document.createElement('style');
+document.head.appendChild(style);
 for (let levelsKey in levels) {
     const level = levels[levelsKey];
-    document.styleSheets[0].insertRule(`.choice.${level.class} { background-color: ${level.colour} !important; }`, 0);
-    console.log('Adding rule for', level);
+    style.sheet.insertRule(`.choice.${level.class} { background-color: ${level.colour}; }`, 0);
 }
