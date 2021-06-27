@@ -607,6 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
     $('#Clear').on('click', () => {
         localStorage.clear();
         nameInput.value = '';
+        updateOwner(nameInput);
         setupDOM();
     });
 });
