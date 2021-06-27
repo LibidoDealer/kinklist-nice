@@ -286,15 +286,6 @@ const updateOwner = (target: HTMLInputElement) => {
     target.style.width = `${theWidth}px`;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const nameInput = document.getElementById('name') as HTMLInputElement;
-    if (localStorage.owner !== undefined) {
-        nameInput.value = localStorage.owner;
-    }
-    updateOwner(nameInput);
-    nameInput.addEventListener('input', (event: InputEvent) => updateOwner(event.target as HTMLInputElement));
-});
-
 const setupDOM = () => {
     const inputList = $('#InputList');
     inputList.empty();
@@ -598,17 +589,25 @@ $('#Clear').on('click', () => {
     setupDOM();
 });
 
-setupDOM();
-restoreState();
-$('#export').on('click', exportFns.export);
+document.addEventListener('DOMContentLoaded', () => {
+    const nameInput = document.getElementById('name') as HTMLInputElement;
+    if (localStorage.owner !== undefined) {
+        nameInput.value = localStorage.owner;
+    }
+    updateOwner(nameInput);
+    nameInput.addEventListener('input', (event: InputEvent) => updateOwner(event.target as HTMLInputElement));
 
+    setupDOM();
+    restoreState();
+    $('#export').on('click', exportFns.export);
 
-// Add level styles
-const style = document.createElement('style');
-const legend = document.getElementById('legend');
-document.head.appendChild(style);
-for (let levelsKey in levels) {
-    const level = levels[levelsKey];
-    style.sheet.insertRule(`.choice.${level.class} { background-color: ${level.colour}; }`, 0);
-    legend.innerHTML += `<li><div class="choice ${level.class}"></div> <span class="legend-text">${levelsKey}</span></li>`;
-}
+    // Add level styles
+    const style = document.createElement('style');
+    const legend = document.getElementById('legend');
+    document.head.appendChild(style);
+    for (let levelsKey in levels) {
+        const level = levels[levelsKey];
+        style.sheet.insertRule(`.choice.${level.class} { background-color: ${level.colour}; }`, 0);
+        legend.innerHTML += `<li><div class="choice ${level.class}"></div> <span class="legend-text">${levelsKey}</span></li>`;
+    }
+});
