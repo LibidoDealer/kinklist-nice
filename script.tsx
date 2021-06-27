@@ -165,22 +165,15 @@ const kinks = {
         ]
     },
     'Roleplay': {
-        'fields': ['General'],
+        'fields': ['Self / partner', 'Partner / self'],
         'kinks': [
             'Daddy/babygirl',
             'Mommy/babyboy',
             'Sister/Brother',
             'Master/Slave',
-        ]
-    },
-    'Situations': {
-        'fields': ['Self / partner', 'Partner / self'],
-        'kinks': [
             'Doctor/nurse',
-            'Mistress/slave',
             'Teacher/student',
             'Nun/priest',
-            'Boss/Secretary',
         ]
     },
     'Surrealism': {
