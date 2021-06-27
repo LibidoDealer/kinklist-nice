@@ -605,8 +605,10 @@ $('#export').on('click', exportFns.export);
 
 // Add level styles
 const style = document.createElement('style');
+const legend = document.getElementById('legend');
 document.head.appendChild(style);
 for (let levelsKey in levels) {
     const level = levels[levelsKey];
     style.sheet.insertRule(`.choice.${level.class} { background-color: ${level.colour}; }`, 0);
+    legend.innerHTML += `<li><div class="choice ${level.class}"></div> <span class="legend-text">${levelsKey}</span></li>`;
 }
