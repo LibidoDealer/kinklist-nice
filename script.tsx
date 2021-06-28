@@ -629,26 +629,34 @@ document.addEventListener('DOMContentLoaded', () => {
         nameInput.value = localStorage.owner;
     }
     updateOwner(nameInput);
-    nameInput.addEventListener('input', (event: InputEvent) => updateOwner(event.target as HTMLInputElement));
+    nameInput.addEventListener('input', (event) => updateOwner(event.target as HTMLInputElement));
 
     setupDOM();
     restoreState();
-    document.getElementById('export').addEventListener('click', exportImage);
+    const exportButton = document.getElementById('export');
+    if (exportButton !== null) {
+        exportButton.addEventListener('click', exportImage);
+    }
 
     // Add level styles
     const style = document.createElement('style');
     const legend = document.getElementById('legend');
     document.head.appendChild(style);
-    for (const levelsKey in levels) {
-        const level = levels[levelsKey];
-        style.sheet.insertRule(`.choice.${level.class} { background-color: ${level.colour}; }`, 0);
-        legend.innerHTML += `<li><div class="choice ${level.class}"></div> <span class="legend-text">${levelsKey}</span></li>`;
+    if (style.sheet !== null && legend !== null) {
+        for (const levelsKey in levels) {
+            const level = levels[levelsKey];
+            style.sheet.insertRule(`.choice.${level.class} { background-color: ${level.colour}; }`, 0);
+            legend.innerHTML += `<li><div class="choice ${level.class}"></div> <span class="legend-text">${levelsKey}</span></li>`;
+        }
     }
 
-    document.getElementById('Clear').addEventListener('click', (): void => {
-        localStorage.clear();
-        nameInput.value = '';
-        updateOwner(nameInput);
-        setupDOM();
-    })
+    const clearButton = document.getElementById('Clear');
+    if (clearButton !== null) {
+        clearButton.addEventListener('click', (): void => {
+            localStorage.clear();
+            nameInput.value = '';
+            updateOwner(nameInput);
+            setupDOM();
+        })
+    }
 });
