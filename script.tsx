@@ -264,10 +264,12 @@ const updateOwner = (target: HTMLInputElement): void => {
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
-    target.parentElement.appendChild(span);
-    const theWidth = span.getBoundingClientRect().width;
-    target.parentElement.removeChild(span);
-    target.style.width = `${theWidth}px`;
+    if (target.parentElement !== null) {
+        target.parentElement.appendChild(span);
+        const theWidth = span.getBoundingClientRect().width;
+        target.parentElement.removeChild(span);
+        target.style.width = `${theWidth}px`;
+    }
 }
 
 const setupDOM = (): void => {
@@ -308,8 +310,10 @@ const setupDOM = (): void => {
                     $button.dataset['level'] = levelName;
                     $button.addEventListener('click', (e) => {
                         const target = e.target as HTMLElement;
-                        for (const selected of target.parentElement.getElementsByClassName('selected')) {
-                            selected.classList.remove('selected');
+                        if (target.parentElement !== null) {
+                            for (const selected of target.parentElement.getElementsByClassName('selected')) {
+                                selected.classList.remove('selected');
+                            }
                         }
                         target.classList.add('selected');
                         const path = `${strToClass(catName)}/${strToClass(name)}/${strToClass(fieldName)}`;
@@ -335,15 +339,45 @@ const restoreState = (): void => {
     for (const path in localStorage) {
         if (localStorage.hasOwnProperty(path) && path.indexOf('/') >= 0) {
             const bits = path.split('/');
-            try {
-                document.querySelector(`.${CATEGORY_PREFIX}${bits[0]} .${TYPE_PREFIX}${bits[1]} .${CHOICE_PREFIX}${bits[2]} .${localStorage[path]}`).classList.add('selected');
-            } catch (e) {
-                console.warn('Error restoring', bits);
+            if (bits.length === 3) {
+                const [category, type, choice] = bits;
+                const selector = `.${CATEGORY_PREFIX}${category} .${TYPE_PREFIX}${type} .${CHOICE_PREFIX}${choice} .${localStorage[path]}`;
+                const element = document.querySelector(selector);
+                if (element === null) {
+                    console.warn('Path no longer exists:', bits);
+                    localStorage.removeItem(path);
+                } else {
+                    element.classList.add('selected')
+                }
+            } else {
+                console.warn('Bad state path:', bits);
                 localStorage.removeItem(path);
             }
         }
     }
 };
+
+interface PartialDrawCall {
+    y: number,
+    type: string,
+    data: {
+        category?: string,
+        text?: string,
+        fields?: Array<string>,
+        choices?: Array<string>,
+    }
+}
+
+interface DrawCall {
+    x: number,
+    y: number,
+    data: {
+        category?: string,
+        text?: string,
+        fields?: Array<string>,
+        choices?: Array<string>,
+    }
+}
 
 const exportFns = {
     drawLegend: (context: CanvasRenderingContext2D): void => {
@@ -377,7 +411,10 @@ const exportFns = {
             height: height
         });
 
-        const context: CanvasRenderingContext2D = canvas.getContext('2d');
+        const context = canvas.getContext('2d');
+        if (context === null) {
+            throw new Error('Could not get 2D canvas');
+        }
         context.fillStyle = 'rgba(255, 255, 255, 0.7)';
         context.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -393,12 +430,18 @@ const exportFns = {
         return {context: context, canvas: canvas};
     },
     drawCallHandlers: {
-        simpleTitle: (context: CanvasRenderingContext2D, drawCall): void => {
+        simpleTitle: (context: CanvasRenderingContext2D, drawCall: DrawCall): void => {
+            if (drawCall.data.text === undefined) {
+                throw new Error('Title missing data.text');
+            }
             context.fillStyle = '#000000';
             context.font = "bold 18px Arial";
-            context.fillText(drawCall.data.category, drawCall.x, drawCall.y + 5);
+            context.fillText(drawCall.data.text, drawCall.x, drawCall.y + 5);
         },
-        titleSubtitle: (context: CanvasRenderingContext2D, drawCall): void => {
+        titleSubtitle: (context: CanvasRenderingContext2D, drawCall: DrawCall): void => {
+            if (drawCall.data.category === undefined || drawCall.data.fields === undefined) {
+                throw new Error('Title missing data.category or data.fields');
+            }
             context.fillStyle = '#000000';
             context.font = "bold 18px Arial";
             context.fillText(drawCall.data.category, drawCall.x, drawCall.y + 5);
@@ -407,7 +450,10 @@ const exportFns = {
             context.font = "italic 12px Arial";
             context.fillText(fieldsStr, drawCall.x, drawCall.y + 20);
         },
-        'kink-type': (context: CanvasRenderingContext2D, drawCall): void => {
+        'kink-type': (context: CanvasRenderingContext2D, drawCall: DrawCall): void => {
+            if (drawCall.data.text === undefined || drawCall.data.choices === undefined) {
+                throw new Error('Kink type missing data.text or data.choices');
+            }
             context.fillStyle = '#000000';
             context.font = "12px Arial";
 
@@ -463,7 +509,7 @@ const exportFns = {
         );
 
         // Initialize columns and drawStacks
-        const columns: Array<{ height: number, drawStack: Array<Object> }> = [];
+        const columns: Array<{ height: number, drawStack: Array<PartialDrawCall> }> = [];
         for (let i = 0; i < numCols; i++) {
             columns.push({height: 0, drawStack: []});
         }
@@ -492,17 +538,15 @@ const exportFns = {
 
             // Drawcall for title
             if (fields.length < 2) {
-                column.height += simpleTitleHeight;
                 column.drawStack.push({
                     y: column.height,
                     type: 'simpleTitle',
                     data: {
-                        category: catName,
-                        fields: null
+                        text: catName
                     }
                 });
+                column.height += simpleTitleHeight;
             } else {
-                column.height += titleSubtitleHeight;
                 column.drawStack.push({
                     y: column.height,
                     type: 'titleSubtitle',
@@ -511,26 +555,30 @@ const exportFns = {
                         fields: fields
                     }
                 });
+                column.height += titleSubtitleHeight;
             }
 
             // Drawcalls for kinks
             $cat.find('.kink-type').each(function () {
                 const $kinkRow = $(this);
-                const drawCall = {
-                    y: column.height, type: 'kink-type', data: {
-                        choices: [],
-                        text: $kinkRow.data('kink')
-                    }
-                };
-                column.drawStack.push(drawCall);
-                column.height += rowHeight;
+                const choices: Array<string> = [];
 
                 // Add choices
                 $kinkRow.find('.kink-choices').each((c, e) => {
                     const selected = e.getElementsByClassName('selected');
-                    const selection = (selected.length > 0) ? (selected[0] as HTMLElement).dataset['level'] : null;
-                    drawCall.data.choices.push(selection);
+                    const selection = (selected.length > 0) ? (selected[0] as HTMLElement).dataset['level'] as string : 'not-chosen';
+                    choices.push(selection);
                 });
+
+                column.drawStack.push({
+                    y: column.height,
+                    type: 'kink-type',
+                    data: {
+                        choices: choices,
+                        text: $kinkRow.data('kink')
+                    }
+                });
+                column.height += rowHeight;
             });
         });
 
@@ -554,10 +602,12 @@ const exportFns = {
 
             const drawX = offsets.left + (columnWidth * i);
             for (let j = 0; j < drawStack.length; j++) {
-                const drawCall = drawStack[j];
-                drawCall.x = drawX;
-                drawCall.y += offsets.top;
-                exportFns.drawCallHandlers[drawCall.type](context, drawCall);
+                const partialDrawCall = drawStack[j];
+                exportFns.drawCallHandlers[partialDrawCall.type](context, {
+                    x: drawX,
+                    y: partialDrawCall.y + offsets.top,
+                    data: partialDrawCall.data,
+                });
             }
         }
 
