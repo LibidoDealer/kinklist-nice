@@ -31,7 +31,7 @@ const kinks: { [key: string]: { fields: Array<string>, kinks: Array<string> } } 
         'fields': ['Self', 'Partner'],
         'kinks': [
             'Lingerie',
-            'Pantyhouse / Stockings',
+            'Pantyhose / Stockings',
             'Heels',
             'Leather',
             'Latex',
@@ -115,10 +115,10 @@ const kinks: { [key: string]: { fields: Array<string>, kinks: Array<string> } } 
     'No consent': {
         'fields': ['Aggressor', 'Target'],
         'kinks': [
-            'Non-con / rape',
+            'Rape',
             'Blackmail / coercion',
             'Kidnapping',
-            'Drugs / alcohol',
+            'Hypnosis',
         ]
     },
     'Taboo': {
@@ -240,10 +240,6 @@ const levels: { [key: string]: { colour: string, class: string } } = {
     'Okay': {
         'colour': '#FDFD6B',
         'class': 'okay',
-    },
-    'Indifferent': {
-        'colour': '#DB6C00',
-        'class': 'indifferent',
     },
     'Turn Off': {
         'colour': '#920000',
