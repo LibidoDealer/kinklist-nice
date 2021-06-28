@@ -1,6 +1,7 @@
 const CATEGORY_PREFIX = 'category-';
 const TYPE_PREFIX = 'type-';
 const CHOICE_PREFIX = 'choice-';
+const SELECTED = 'selected';
 
 const strToClass = (str: string): string => {
     return str.toLowerCase().replace(/[^a-z]+/g, '-');
@@ -307,16 +308,16 @@ const setupDOM = (): void => {
                     $button.addEventListener('click', (e) => {
                         const target = e.target as HTMLElement;
                         const path = `${strToClass(catName)}/${strToClass(name)}/${strToClass(fieldName)}`;
-                        const currentlySet = target.classList.contains('selected');
+                        const currentlySet = target.classList.contains(SELECTED);
                         if (target.parentElement !== null) {
-                            for (const selected of target.parentElement.getElementsByClassName('selected')) {
-                                selected.classList.remove('selected');
+                            for (const selected of target.parentElement.getElementsByClassName(SELECTED)) {
+                                selected.classList.remove(SELECTED);
                             }
                         }
                         if (currentlySet) {
                             localStorage.removeItem(path);
                         } else {
-                            target.classList.add('selected');
+                            target.classList.add(SELECTED);
                             localStorage[path] = strToClass(levelName);
                         }
                     });
@@ -346,7 +347,7 @@ const restoreState = (): void => {
                     console.warn('Path no longer exists:', bits);
                     localStorage.removeItem(path);
                 } else {
-                    element.classList.add('selected')
+                    element.classList.add(SELECTED)
                 }
             } else {
                 console.warn('Bad state path:', bits);
@@ -533,7 +534,7 @@ const exportImage = (): void => {
         }
         const column = columns[columnIndex];
 
-        // Drawcall for title
+        // DrawCall for title
         if (fields.length < 2) {
             column.drawStack.push({
                 y: column.height,
@@ -555,14 +556,14 @@ const exportImage = (): void => {
             column.height += titleSubtitleHeight;
         }
 
-        // Drawcalls for kinks
+        // DrawCalls for kinks
         $cat.find('.kink-type').each(function () {
             const $kinkRow = $(this);
             const choices: Array<string> = [];
 
             // Add choices
             $kinkRow.find('.kink-choices').each((c, e) => {
-                const selected = e.getElementsByClassName('selected');
+                const selected = e.getElementsByClassName(SELECTED);
                 const selection = (selected.length > 0) ? (selected[0] as HTMLElement).dataset['level'] as string : 'not-chosen';
                 choices.push(selection);
             });
