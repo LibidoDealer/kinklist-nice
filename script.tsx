@@ -358,7 +358,7 @@ const restoreState = (): void => {
 
 interface PartialDrawCall {
     y: number,
-    type: string,
+    handler: (context: CanvasRenderingContext2D, drawCall: DrawCall) => void,
     data: {
         category?: string,
         text?: string,
@@ -538,7 +538,7 @@ const exportImage = (): void => {
         if (fields.length < 2) {
             column.drawStack.push({
                 y: column.height,
-                type: 'simpleTitle',
+                handler: drawCallHandlers.simpleTitle,
                 data: {
                     text: catName
                 }
@@ -547,7 +547,7 @@ const exportImage = (): void => {
         } else {
             column.drawStack.push({
                 y: column.height,
-                type: 'titleSubtitle',
+                handler: drawCallHandlers.titleSubtitle,
                 data: {
                     category: catName,
                     fields: fields
@@ -570,7 +570,7 @@ const exportImage = (): void => {
 
             column.drawStack.push({
                 y: column.height,
-                type: 'kinkType',
+                handler: drawCallHandlers.kinkType,
                 data: {
                     choices: choices,
                     text: $kinkRow.data('kink')
@@ -601,7 +601,7 @@ const exportImage = (): void => {
         const drawX = offsets.left + (columnWidth * i);
         for (let j = 0; j < drawStack.length; j++) {
             const partialDrawCall = drawStack[j];
-            drawCallHandlers[partialDrawCall.type](context, {
+            partialDrawCall.handler(context, {
                 x: drawX,
                 y: partialDrawCall.y + offsets.top,
                 data: partialDrawCall.data,
