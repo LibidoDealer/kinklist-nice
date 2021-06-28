@@ -379,251 +379,250 @@ interface DrawCall {
     }
 }
 
-const exportFns = {
-    drawLegend: (context: CanvasRenderingContext2D): void => {
-        context.font = "bold 13px Arial";
-        context.fillStyle = '#000000';
+const drawLegend = (context: CanvasRenderingContext2D): void => {
+    context.font = "bold 13px Arial";
+    context.fillStyle = '#000000';
 
-        const levelNames = Object.keys(levels);
-        const x = context.canvas.width - 15 - (120 * levelNames.length);
-        for (let i = 0; i < levelNames.length; i++) {
+    const levelNames = Object.keys(levels);
+    const x = context.canvas.width - 15 - (120 * levelNames.length);
+    for (let i = 0; i < levelNames.length; i++) {
+        context.beginPath();
+        context.arc(x + (120 * i), 17, 8, 0, 2 * Math.PI, false);
+        context.fillStyle = levels[levelNames[i]].colour;
+        context.fill();
+        context.strokeStyle = 'rgba(0, 0, 0, 0.5)'
+        context.lineWidth = 1;
+        context.stroke();
+
+        context.fillStyle = '#000000';
+        context.fillText(levelNames[i], x + 15 + (i * 120), 22);
+    }
+}
+const setupCanvas = (width: number, height: number, username: string) => {
+    $('canvas').remove();
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+
+    const $canvas = $(canvas);
+    $canvas.css({
+        width: width,
+        height: height
+    });
+
+    const context = canvas.getContext('2d');
+    if (context === null) {
+        throw new Error('Could not get 2D canvas');
+    }
+    context.fillStyle = 'rgba(255, 255, 255, 0.7)';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    context.font = "bold 24px Arial";
+    context.fillStyle = '#000000';
+    if (username.length > 0) {
+        context.fillText(`${username}'s Kink List`, 5, 25);
+    } else {
+        context.fillText('Kink List', 5, 25);
+    }
+
+    drawLegend(context);
+    return {context: context, canvas: canvas};
+}
+const drawCallHandlers = {
+    simpleTitle: (context: CanvasRenderingContext2D, drawCall: DrawCall): void => {
+        if (drawCall.data.text === undefined) {
+            throw new Error('Title missing data.text');
+        }
+        context.fillStyle = '#000000';
+        context.font = "bold 18px Arial";
+        context.fillText(drawCall.data.text, drawCall.x, drawCall.y + 5);
+    },
+    titleSubtitle: (context: CanvasRenderingContext2D, drawCall: DrawCall): void => {
+        if (drawCall.data.category === undefined || drawCall.data.fields === undefined) {
+            throw new Error('Title missing data.category or data.fields');
+        }
+        context.fillStyle = '#000000';
+        context.font = "bold 18px Arial";
+        context.fillText(drawCall.data.category, drawCall.x, drawCall.y + 5);
+
+        const fieldsStr = drawCall.data.fields.join(', ');
+        context.font = "italic 12px Arial";
+        context.fillText(fieldsStr, drawCall.x, drawCall.y + 20);
+    },
+    kinkType: (context: CanvasRenderingContext2D, drawCall: DrawCall): void => {
+        if (drawCall.data.text === undefined || drawCall.data.choices === undefined) {
+            throw new Error('Kink type missing data.text or data.choices');
+        }
+        context.fillStyle = '#000000';
+        context.font = "12px Arial";
+
+        const x = drawCall.x + 5 + (drawCall.data.choices.length * 20);
+        const y = drawCall.y - 6;
+        context.fillText(drawCall.data.text, x, y);
+
+        // Circles
+        for (let i = 0; i < drawCall.data.choices.length; i++) {
+            const choice = drawCall.data.choices[i];
+            const color = (choice in levels) ? levels[choice].colour : 'rgba(200, 200, 200, 0.5)';
+
+            const x = 10 + drawCall.x + (i * 20);
+            const y = drawCall.y - 10;
+
             context.beginPath();
-            context.arc(x + (120 * i), 17, 8, 0, 2 * Math.PI, false);
-            context.fillStyle = levels[levelNames[i]].colour;
+            context.arc(x, y, 8, 0, 2 * Math.PI, false);
+            context.fillStyle = color;
             context.fill();
             context.strokeStyle = 'rgba(0, 0, 0, 0.5)'
             context.lineWidth = 1;
             context.stroke();
-
-            context.fillStyle = '#000000';
-            context.fillText(levelNames[i], x + 15 + (i * 120), 22);
         }
-    },
-    setupCanvas: (width: number, height: number, username: string) => {
-        $('canvas').remove();
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-
-        const $canvas = $(canvas);
-        $canvas.css({
-            width: width,
-            height: height
-        });
-
-        const context = canvas.getContext('2d');
-        if (context === null) {
-            throw new Error('Could not get 2D canvas');
-        }
-        context.fillStyle = 'rgba(255, 255, 255, 0.7)';
-        context.fillRect(0, 0, canvas.width, canvas.height);
-
-        context.font = "bold 24px Arial";
-        context.fillStyle = '#000000';
-        if (username.length > 0) {
-            context.fillText(`${username}'s Kink List`, 5, 25);
-        } else {
-            context.fillText('Kink List', 5, 25);
-        }
-
-        exportFns.drawLegend(context);
-        return {context: context, canvas: canvas};
-    },
-    drawCallHandlers: {
-        simpleTitle: (context: CanvasRenderingContext2D, drawCall: DrawCall): void => {
-            if (drawCall.data.text === undefined) {
-                throw new Error('Title missing data.text');
-            }
-            context.fillStyle = '#000000';
-            context.font = "bold 18px Arial";
-            context.fillText(drawCall.data.text, drawCall.x, drawCall.y + 5);
-        },
-        titleSubtitle: (context: CanvasRenderingContext2D, drawCall: DrawCall): void => {
-            if (drawCall.data.category === undefined || drawCall.data.fields === undefined) {
-                throw new Error('Title missing data.category or data.fields');
-            }
-            context.fillStyle = '#000000';
-            context.font = "bold 18px Arial";
-            context.fillText(drawCall.data.category, drawCall.x, drawCall.y + 5);
-
-            const fieldsStr = drawCall.data.fields.join(', ');
-            context.font = "italic 12px Arial";
-            context.fillText(fieldsStr, drawCall.x, drawCall.y + 20);
-        },
-        'kink-type': (context: CanvasRenderingContext2D, drawCall: DrawCall): void => {
-            if (drawCall.data.text === undefined || drawCall.data.choices === undefined) {
-                throw new Error('Kink type missing data.text or data.choices');
-            }
-            context.fillStyle = '#000000';
-            context.font = "12px Arial";
-
-            const x = drawCall.x + 5 + (drawCall.data.choices.length * 20);
-            const y = drawCall.y - 6;
-            context.fillText(drawCall.data.text, x, y);
-
-            // Circles
-            for (let i = 0; i < drawCall.data.choices.length; i++) {
-                const choice = drawCall.data.choices[i];
-                const color = (choice in levels) ? levels[choice].colour : 'rgba(200, 200, 200, 0.5)';
-
-                const x = 10 + drawCall.x + (i * 20);
-                const y = drawCall.y - 10;
-
-                context.beginPath();
-                context.arc(x, y, 8, 0, 2 * Math.PI, false);
-                context.fillStyle = color;
-                context.fill();
-                context.strokeStyle = 'rgba(0, 0, 0, 0.5)'
-                context.lineWidth = 1;
-                context.stroke();
-            }
-        }
-    },
-    export: (): void => {
-        const kinkCategory = $('.kink-category');
-
-        // Constants
-        const numCols = 6;
-        const columnWidth = 250;
-        const simpleTitleHeight = 35;
-        const titleSubtitleHeight = 50;
-        const rowHeight = 25;
-        const offsets = {
-            left: 10,
-            right: 10,
-            top: 50,
-            bottom: 10
-        };
-
-        // Find out how many we have of everything
-        const numCats = kinkCategory.length;
-        const dualCats = $('.kink-category th + th + th').length;
-        const simpleCats = numCats - dualCats;
-        const numKinks = $('.kink-type').length;
-
-        // Determine the height required for all categories and kinks
-        const totalHeight = (
-            (numKinks * rowHeight) +
-            (dualCats * titleSubtitleHeight) +
-            (simpleCats * simpleTitleHeight)
-        );
-
-        // Initialize columns and drawStacks
-        const columns: Array<{ height: number, drawStack: Array<PartialDrawCall> }> = [];
-        for (let i = 0; i < numCols; i++) {
-            columns.push({height: 0, drawStack: []});
-        }
-
-        // Create drawcalls and place them in the drawStack
-        // for the appropriate column
-        const avgColHeight = totalHeight / numCols;
-        let columnIndex = 0;
-        kinkCategory.each((_, e) => {
-            const $cat = $(e);
-            const catName = $cat.data('category');
-            const category = kinks[catName];
-            const fields = category.fields;
-            const catKinks = category.kinks;
-
-            let catHeight = 0;
-            catHeight += (fields.length === 1) ? simpleTitleHeight : titleSubtitleHeight;
-            catHeight += (catKinks.length * rowHeight);
-
-            // Determine which column to place this category in
-            if ((columns[columnIndex].height + (catHeight / 2)) > avgColHeight) columnIndex++;
-            while (columnIndex >= numCols) {
-                columnIndex--;
-            }
-            const column = columns[columnIndex];
-
-            // Drawcall for title
-            if (fields.length < 2) {
-                column.drawStack.push({
-                    y: column.height,
-                    type: 'simpleTitle',
-                    data: {
-                        text: catName
-                    }
-                });
-                column.height += simpleTitleHeight;
-            } else {
-                column.drawStack.push({
-                    y: column.height,
-                    type: 'titleSubtitle',
-                    data: {
-                        category: catName,
-                        fields: fields
-                    }
-                });
-                column.height += titleSubtitleHeight;
-            }
-
-            // Drawcalls for kinks
-            $cat.find('.kink-type').each(function () {
-                const $kinkRow = $(this);
-                const choices: Array<string> = [];
-
-                // Add choices
-                $kinkRow.find('.kink-choices').each((c, e) => {
-                    const selected = e.getElementsByClassName('selected');
-                    const selection = (selected.length > 0) ? (selected[0] as HTMLElement).dataset['level'] as string : 'not-chosen';
-                    choices.push(selection);
-                });
-
-                column.drawStack.push({
-                    y: column.height,
-                    type: 'kink-type',
-                    data: {
-                        choices: choices,
-                        text: $kinkRow.data('kink')
-                    }
-                });
-                column.height += rowHeight;
-            });
-        });
-
-        let tallestColumnHeight = 0;
-        for (let i = 0; i < columns.length; i++) {
-            if (tallestColumnHeight < columns[i].height) {
-                tallestColumnHeight = columns[i].height;
-            }
-        }
-
-        const canvasWidth = offsets.left + offsets.right + (columnWidth * numCols);
-        const canvasHeight = offsets.top + offsets.bottom + tallestColumnHeight;
-        const owner = (document.getElementById('name') as HTMLInputElement).value;
-        const setup = exportFns.setupCanvas(canvasWidth, canvasHeight, owner);
-        const context = setup.context;
-        const canvas = setup.canvas;
-
-        for (let i = 0; i < columns.length; i++) {
-            const column = columns[i];
-            const drawStack = column.drawStack;
-
-            const drawX = offsets.left + (columnWidth * i);
-            for (let j = 0; j < drawStack.length; j++) {
-                const partialDrawCall = drawStack[j];
-                exportFns.drawCallHandlers[partialDrawCall.type](context, {
-                    x: drawX,
-                    y: partialDrawCall.y + offsets.top,
-                    data: partialDrawCall.data,
-                });
-            }
-        }
-
-        // Stamp URL
-        context.fillStyle = '#000000';
-        context.font = "12px Arial";
-        context.fillText('kinklist.xyz', canvasWidth - 70, canvasHeight - 10);
-
-        // Save image
-        const pom = document.createElement('a');
-        pom.setAttribute('href', canvas.toDataURL());
-        const filename = owner.length ? owner.replace(/[^a-zA-Z]+/g, '_') : 'kink_list';
-        pom.setAttribute('download', filename + '.png');
-        pom.click();
     }
-};
+}
+const exportImage = (): void => {
+    const kinkCategory = $('.kink-category');
+
+    // Constants
+    const numCols = 6;
+    const columnWidth = 250;
+    const simpleTitleHeight = 35;
+    const titleSubtitleHeight = 50;
+    const rowHeight = 25;
+    const offsets = {
+        left: 10,
+        right: 10,
+        top: 50,
+        bottom: 10
+    };
+
+    // Find out how many we have of everything
+    const numCats = kinkCategory.length;
+    const dualCats = $('.kink-category th + th + th').length;
+    const simpleCats = numCats - dualCats;
+    const numKinks = $('.kink-type').length;
+
+    // Determine the height required for all categories and kinks
+    const totalHeight = (
+        (numKinks * rowHeight) +
+        (dualCats * titleSubtitleHeight) +
+        (simpleCats * simpleTitleHeight)
+    );
+
+    // Initialize columns and drawStacks
+    const columns: Array<{ height: number, drawStack: Array<PartialDrawCall> }> = [];
+    for (let i = 0; i < numCols; i++) {
+        columns.push({height: 0, drawStack: []});
+    }
+
+    // Create drawcalls and place them in the drawStack
+    // for the appropriate column
+    const avgColHeight = totalHeight / numCols;
+    let columnIndex = 0;
+    kinkCategory.each((_, e) => {
+        const $cat = $(e);
+        const catName = $cat.data('category');
+        const category = kinks[catName];
+        const fields = category.fields;
+        const catKinks = category.kinks;
+
+        let catHeight = 0;
+        catHeight += (fields.length === 1) ? simpleTitleHeight : titleSubtitleHeight;
+        catHeight += (catKinks.length * rowHeight);
+
+        // Determine which column to place this category in
+        if ((columns[columnIndex].height + (catHeight / 2)) > avgColHeight) columnIndex++;
+        while (columnIndex >= numCols) {
+            columnIndex--;
+        }
+        const column = columns[columnIndex];
+
+        // Drawcall for title
+        if (fields.length < 2) {
+            column.drawStack.push({
+                y: column.height,
+                type: 'simpleTitle',
+                data: {
+                    text: catName
+                }
+            });
+            column.height += simpleTitleHeight;
+        } else {
+            column.drawStack.push({
+                y: column.height,
+                type: 'titleSubtitle',
+                data: {
+                    category: catName,
+                    fields: fields
+                }
+            });
+            column.height += titleSubtitleHeight;
+        }
+
+        // Drawcalls for kinks
+        $cat.find('.kink-type').each(function () {
+            const $kinkRow = $(this);
+            const choices: Array<string> = [];
+
+            // Add choices
+            $kinkRow.find('.kink-choices').each((c, e) => {
+                const selected = e.getElementsByClassName('selected');
+                const selection = (selected.length > 0) ? (selected[0] as HTMLElement).dataset['level'] as string : 'not-chosen';
+                choices.push(selection);
+            });
+
+            column.drawStack.push({
+                y: column.height,
+                type: 'kinkType',
+                data: {
+                    choices: choices,
+                    text: $kinkRow.data('kink')
+                }
+            });
+            column.height += rowHeight;
+        });
+    });
+
+    let tallestColumnHeight = 0;
+    for (let i = 0; i < columns.length; i++) {
+        if (tallestColumnHeight < columns[i].height) {
+            tallestColumnHeight = columns[i].height;
+        }
+    }
+
+    const canvasWidth = offsets.left + offsets.right + (columnWidth * numCols);
+    const canvasHeight = offsets.top + offsets.bottom + tallestColumnHeight;
+    const owner = (document.getElementById('name') as HTMLInputElement).value;
+    const setup = setupCanvas(canvasWidth, canvasHeight, owner);
+    const context = setup.context;
+    const canvas = setup.canvas;
+
+    for (let i = 0; i < columns.length; i++) {
+        const column = columns[i];
+        const drawStack = column.drawStack;
+
+        const drawX = offsets.left + (columnWidth * i);
+        for (let j = 0; j < drawStack.length; j++) {
+            const partialDrawCall = drawStack[j];
+            drawCallHandlers[partialDrawCall.type](context, {
+                x: drawX,
+                y: partialDrawCall.y + offsets.top,
+                data: partialDrawCall.data,
+            });
+        }
+    }
+
+    // Stamp URL
+    context.fillStyle = '#000000';
+    context.font = "12px Arial";
+    context.fillText('kinklist.xyz', canvasWidth - 70, canvasHeight - 10);
+
+    // Save image
+    const pom = document.createElement('a');
+    pom.setAttribute('href', canvas.toDataURL());
+    const filename = owner.length ? owner.replace(/[^a-zA-Z]+/g, '_') : 'kink_list';
+    pom.setAttribute('download', filename + '.png');
+    pom.click();
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const nameInput = document.getElementById('name') as HTMLInputElement;
@@ -635,7 +634,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setupDOM();
     restoreState();
-    document.getElementById('export').addEventListener('click', exportFns.export);
+    document.getElementById('export').addEventListener('click', exportImage);
 
     // Add level styles
     const style = document.createElement('style');
