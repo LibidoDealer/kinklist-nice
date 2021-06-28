@@ -161,14 +161,12 @@ const kinks: { [key: string]: { fields: Array<string>, kinks: Array<string> } } 
             'Foot play',
             'Tickling',
             'Sensation play',
-            'Sensory deprivation',
         ]
     },
     'Roleplay': {
         'fields': ['Self / partner', 'Partner / self'],
         'kinks': [
-            'Daddy/babygirl',
-            'Mommy/babyboy',
+            'Parent/baby (DDLG...)',
             'Sister/Brother',
             'Master/Slave',
             'Doctor/nurse',
@@ -207,7 +205,6 @@ const kinks: { [key: string]: { fields: Array<string>, kinks: Array<string> } } 
             'Outdoor sex',
             'Flashing',
             'Butt plugs in public',
-            'Remote controlled toys',
         ]
     },
     'Pain': {
@@ -231,11 +228,11 @@ const levels: { [key: string]: { colour: string, class: string } } = {
         'class': 'irrelevant',
     },
     'Favourite': {
-        'colour': '#6DB5FE',
+        'colour': '#88FC79',
         'class': 'favourite',
     },
     'Like': {
-        'colour': '#88FC79',
+        'colour': '#6DB5FE',
         'class': 'like',
     },
     'Curious': {
@@ -386,7 +383,7 @@ const exportFns = {
             height: height
         });
 
-        const context = canvas.getContext('2d');
+        const context: CanvasRenderingContext2D = canvas.getContext('2d');
         context.fillStyle = 'rgba(255, 255, 255, 0.7)';
         context.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -405,7 +402,7 @@ const exportFns = {
         simpleTitle: (context: CanvasRenderingContext2D, drawCall): void => {
             context.fillStyle = '#000000';
             context.font = "bold 18px Arial";
-            context.fillText(drawCall.data, drawCall.x, drawCall.y + 5);
+            context.fillText(drawCall.data.category, drawCall.x, drawCall.y + 5);
         },
         titleSubtitle: (context: CanvasRenderingContext2D, drawCall): void => {
             context.fillStyle = '#000000';
@@ -500,23 +497,26 @@ const exportFns = {
             const column = columns[columnIndex];
 
             // Drawcall for title
-            const drawCall = {
-                y: column.height,
-                type: undefined,
-                data: undefined
-            };
-            column.drawStack.push(drawCall);
             if (fields.length < 2) {
                 column.height += simpleTitleHeight;
-                drawCall.type = 'simpleTitle';
-                drawCall.data = catName;
+                column.drawStack.push({
+                    y: column.height,
+                    type: 'simpleTitle',
+                    data: {
+                        category: catName,
+                        fields: null
+                    }
+                });
             } else {
                 column.height += titleSubtitleHeight;
-                drawCall.type = 'titleSubtitle';
-                drawCall.data = {
-                    category: catName,
-                    fields: fields
-                };
+                column.drawStack.push({
+                    y: column.height,
+                    type: 'titleSubtitle',
+                    data: {
+                        category: catName,
+                        fields: fields
+                    }
+                });
             }
 
             // Drawcalls for kinks
