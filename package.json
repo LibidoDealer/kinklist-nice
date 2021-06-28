@@ -7,8 +7,10 @@
   "author": "Alen",
   "license": "MIT",
   "dependencies": {
+    "jquery": "^3.6.0"
+  },
+  "devDependencies": {
     "@types/jquery": "^3.5.5",
-    "jquery": "^3.6.0",
-    "typescript": "^4.2.4"
+    "typescript": "^4.3.4"
   }
 }
