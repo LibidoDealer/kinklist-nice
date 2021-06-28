@@ -83,7 +83,7 @@ const kinks: { [key: string]: { fields: Array<string>, kinks: Array<string> } } 
             'Leash',
             'Chastity',
             'Bondage',
-            'Encasement',
+            'Encasement / cage',
             'Blindfold',
             'Shibari',
         ]
