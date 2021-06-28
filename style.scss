@@ -20,7 +20,7 @@ h2 {
 }
 
 #InputList {
-  column-width: 400px;
+  column-width: 380px;
 
   .kink-category {
     break-inside: avoid-column;
@@ -43,7 +43,7 @@ h2 {
 
         .choicesCol {
           box-sizing: border-box;
-          width: 126px; // TODO: Do not hardcode
+          width: 106px; // TODO: Do not hardcode
         }
       }
 

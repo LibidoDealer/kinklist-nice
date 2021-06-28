@@ -221,10 +221,6 @@ const kinks: { [key: string]: { fields: Array<string>, kinks: Array<string> } } 
     },
 };
 const levels: { [key: string]: { colour: string, class: string } } = {
-    'Irrelevant': {
-        'colour': '#FFFFFF',
-        'class': 'irrelevant',
-    },
     'Favourite': {
         'colour': '#88FC79',
         'class': 'favourite',
@@ -310,16 +306,19 @@ const setupDOM = (): void => {
                     $button.dataset['level'] = levelName;
                     $button.addEventListener('click', (e) => {
                         const target = e.target as HTMLElement;
+                        const path = `${strToClass(catName)}/${strToClass(name)}/${strToClass(fieldName)}`;
+                        const currentlySet = target.classList.contains('selected');
                         if (target.parentElement !== null) {
                             for (const selected of target.parentElement.getElementsByClassName('selected')) {
                                 selected.classList.remove('selected');
                             }
                         }
-                        target.classList.add('selected');
-                        const path = `${strToClass(catName)}/${strToClass(name)}/${strToClass(fieldName)}`;
-                        const value = strToClass(levelName);
-                        console.log('Setting', path, 'to', value);
-                        localStorage[path] = value;
+                        if (currentlySet) {
+                            localStorage.removeItem(path);
+                        } else {
+                            target.classList.add('selected');
+                            localStorage[path] = strToClass(levelName);
+                        }
                     });
                     $choices.append($button);
                 }
