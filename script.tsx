@@ -6,7 +6,7 @@ const strToClass = (str: string): string => {
     return str.toLowerCase().replace(/[^a-z]+/g, '-');
 }
 
-const kinks = {
+const kinks: { [key: string]: { fields: Array<string>, kinks: Array<string> } } = {
     'Bodies': {
         'fields': ['General'],
         'kinks': [
@@ -225,7 +225,7 @@ const kinks = {
         ]
     },
 };
-const levels = {
+const levels: { [key: string]: { colour: string, class: string } } = {
     'Irrelevant': {
         'colour': '#FFFFFF',
         'class': 'irrelevant',
@@ -472,7 +472,7 @@ const exportFns = {
         );
 
         // Initialize columns and drawStacks
-        const columns = [];
+        const columns: Array<{ height: number, drawStack: Array<Object> }> = [];
         for (let i = 0; i < numCols; i++) {
             columns.push({height: 0, drawStack: []});
         }
