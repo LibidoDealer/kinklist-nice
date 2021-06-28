@@ -96,7 +96,6 @@ const kinks: { [key: string]: { fields: Array<string>, kinks: Array<string> } } 
             'Vibrators',
             'Strap-on',
             'Remote controlled',
-            'Glass Dildos',
         ]
     },
     'Domination': {
