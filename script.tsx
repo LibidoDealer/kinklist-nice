@@ -187,7 +187,6 @@ const kinks: { [key: string]: { fields: Array<string>, kinks: Array<string> } } 
     'Misc. Fetish': {
         'fields': ['Giving', 'Receiving'],
         'kinks': [
-            'Fisting',
             'Gangbang',
             'Breath play',
             'Feminization',
