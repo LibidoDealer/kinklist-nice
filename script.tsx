@@ -398,16 +398,15 @@ const drawLegend = (context: CanvasRenderingContext2D): void => {
     }
 }
 const setupCanvas = (width: number, height: number, username: string) => {
-    $('canvas').remove();
+    for (const oldCanvas of document.getElementsByTagName('canvas')) {
+        oldCanvas.remove();
+    }
     const canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
 
-    const $canvas = $(canvas);
-    $canvas.css({
-        width: width,
-        height: height
-    });
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
 
     const context = canvas.getContext('2d');
     if (context === null) {
