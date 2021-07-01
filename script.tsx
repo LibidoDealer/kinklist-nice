@@ -113,7 +113,7 @@ const kinks: { [key: string]: { fields: Array<string>, kinks: Array<string> } } 
             'Mind control',
         ]
     },
-    'No consent': {
+    'Consensual Non consent': {
         'fields': ['Aggressor', 'Target'],
         'kinks': [
             'Rape',
@@ -130,7 +130,6 @@ const kinks: { [key: string]: { fields: Array<string>, kinks: Array<string> } } 
             'Interracial / Raceplay',
             'Bestiality',
             'Necrophilia',
-            'Exhibitionism',
             'Voyeurism',
         ]
     },
@@ -166,7 +165,6 @@ const kinks: { [key: string]: { fields: Array<string>, kinks: Array<string> } } 
     'Roleplay': {
         'fields': ['Self / partner', 'Partner / self'],
         'kinks': [
-            'Parent/baby (DDLG...)',
             'Sister/Brother',
             'Master/Slave',
             'Doctor/nurse',
@@ -190,7 +188,6 @@ const kinks: { [key: string]: { fields: Array<string>, kinks: Array<string> } } 
             'Gangbang',
             'Breath play',
             'Feminization',
-            'Age play',
             'Choking play',
             'Squirting',
             'Shower Sex',
