@@ -4,6 +4,12 @@ const CHOICE_PREFIX = 'choice-';
 const SELECTED = 'selected';
 const IMAGE_FOOTER = 'kinklist.xyz';
 
+// Theme based on OS preference
+const html = document.getElementsByTagName('html')[0];
+const matchMediaPrefDark = window.matchMedia('(prefers-color-scheme: dark)');
+html.dataset.theme = matchMediaPrefDark.matches ? 'dark' : 'light';
+matchMediaPrefDark.addEventListener('change', e => html.dataset.theme = e.matches ? 'dark' : 'light');
+
 const strToClass = (str: string): string => {
     return str.toLowerCase().replace(/[^a-z]+/g, '-');
 }
